@@ -1,0 +1,85 @@
+@extends('layouts.index')
+
+@section('content')
+    <div class="section-wrapper mg-t-20">
+        <div class=""><a href="{{route('domains.to.check.avalile')}}" class="btn btn-primary mb-4">Only available</a>
+        </div>
+        <label class="section-title">Domains to check</label>
+
+        <div class="row justify-content-between align-items-center">
+            <div class="col-12"><a href="{{route('domains')}}" class="btn btn-primary btn-block mg-b-10">Back</a></div>
+            <div class="col-12">
+                <form action="{{route('domains.to.create')}}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label class="form-control-label">Domain to check: <span class="tx-danger">*</span></label>
+                        <div>
+                                <textarea class="form-control" type="text" name="domains" value="{{old('domain')}}"
+                                          placeholder="Enter domain"> </textarea>
+                            <button type="submit" class="btn btn-primary w-100 mt-2">Upload</button>
+                        </div>
+                    </div><!-- col-4 -->
+                </form>
+            </div><!-- col-sm-3 -->
+
+        </div>
+        <div class="table-responsive">
+            <form action="{{route('domain.checked')}}" method="POST">
+                @csrf
+                <table class="table table-striped mg-b-0">
+                    <thead>
+                    <tr>
+                        <th class="bg-dark"><input type="checkbox" class="checkAll"></th>
+                        <th>ID</th>
+                        <th>Domain name</th>
+                        <th style="text-align: right">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($domainsToCheck as $key => $domain)
+                        <tr>
+                            <td>@if(!$domain->is_checked)
+                                    <input type="checkbox" name="checkbox[{{$domain->id}}]">
+                                @endif</td>
+                            <th scope="row">{{$domain->id}}</th>
+                            <td>
+                                <a href="https://app.ahrefs.com/site-explorer/overview/v2/subdomains/live?target={{$domain->domain}}"
+                                   target="_blank">{{$domain->domain}}</a></td>
+
+                            <td align="right">
+                                @if($domain->is_checked)
+                                    <span class="btn-danger text-white px-2 py-1">Checked</span>
+                                @endif
+                                @if($domain->status == 1)
+                                    <span class="btn-success text-white px-2 py-1">Avalible</span>
+                                @elseif($domain->status == 2)
+                                    <span class="btn-danger text-white px-2 py-1">Taken</span>
+                                @else
+                                    <span class="btn-warning text-white px-2 py-1">In proccess</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                <button class="btn btn-warning my-4">Set domains checked</button>
+            </form>
+            {{$domainsToCheck->links()}}
+        </div><!-- bd -->
+    </div><!-- section-wrapper -->
+
+    <script>
+        let button = document.querySelector('.checkAll');
+        button.addEventListener('click', function (e) {
+            if (button.checked) {
+                $(':checkbox').each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $(':checkbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+    </script>
+@endsection
