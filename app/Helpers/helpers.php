@@ -139,16 +139,16 @@ class Helper
                 }
             }
         }
-
-        if ($array['Errors']) {
-            foreach ($array['Errors']['Error'] as $error) {
-                $domainFromError = explode("'", $error);
-                var_dump($domainFromError);
-                if (count($domainFromError) > 1) {
-                    DomainToCheck::where('domain', $domainFromError[1])->update(['status' => 2]);
-                }
-            }
-        }
+//
+//        if ($array['Errors']) {
+//            foreach ($array['Errors']['Error'] as $error) {
+//                $domainFromError = explode("'", $error);
+//                var_dump($domainFromError);
+//                if (count($domainFromError) > 1) {
+//                    DomainToCheck::where('domain', $domainFromError[1])->update(['status' => 2]);
+//                }
+//            }
+//        }
 
         sleep(5);
     }
