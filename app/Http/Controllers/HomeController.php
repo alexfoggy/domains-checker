@@ -104,6 +104,10 @@ class HomeController extends Controller
             $query->where('tag', $request->tag);
         }
         
+        if ($request->has('search') && $request->search !== '') {
+            $query->where('domain', 'like', '%' . $request->search . '%');
+        }
+        
         $domainsToCheck = $query->paginate(100)->appends($request->query());
         $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
 
@@ -123,6 +127,10 @@ class HomeController extends Controller
         
         if ($request->has('tag') && $request->tag !== '') {
             $query->where('tag', $request->tag);
+        }
+        
+        if ($request->has('search') && $request->search !== '') {
+            $query->where('domain', 'like', '%' . $request->search . '%');
         }
         
         $domainsToCheck = $query->paginate(100)->appends($request->query());

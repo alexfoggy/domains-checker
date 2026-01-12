@@ -3,7 +3,7 @@
 @section('content')
     <div class="section-wrapper mg-t-20">
         <div>
-            <div class=""><a href="{{route('domains.to.check.avalile', request()->only('tag'))}}" class="btn btn-primary mb-4">Only
+            <div class=""><a href="{{route('domains.to.check.avalile', request()->only(['tag', 'search']))}}" class="btn btn-primary mb-4">Only
                     available</a>
             </div>
             <div>
@@ -37,28 +37,39 @@
 
         </div>
         
-        @if(isset($tags) && $tags->count() > 0)
         <div class="row mb-3">
             <div class="col-12">
-                <form method="GET" action="{{route('domains.to.check')}}" class="d-inline">
-                    <div class="form-group mb-0">
-                        <label class="form-control-label">Filter by tag:</label>
-                        <div class="d-flex">
-                            <select name="tag" class="form-control" style="max-width: 300px;" onchange="this.form.submit()">
-                                <option value="">All tags</option>
-                                @foreach($tags as $tagOption)
-                                    <option value="{{$tagOption}}" {{request('tag') == $tagOption ? 'selected' : ''}}>{{$tagOption}}</option>
-                                @endforeach
-                            </select>
-                            @if(request('tag'))
-                                <a href="{{route('domains.to.check')}}" class="btn btn-secondary ml-2">Clear filter</a>
-                            @endif
+                <form method="GET" action="{{route('domains.to.check')}}" class="d-inline w-100">
+                    <div class="row align-items-end">
+                        @if(isset($tags) && $tags->count() > 0)
+                        <div class="col-md-4">
+                            <div class="form-group mb-0">
+                                <label class="form-control-label">Filter by tag:</label>
+                                <select name="tag" class="form-control" onchange="this.form.submit()">
+                                    <option value="">All tags</option>
+                                    @foreach($tags as $tagOption)
+                                        <option value="{{$tagOption}}" {{request('tag') == $tagOption ? 'selected' : ''}}>{{$tagOption}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="form-control-label">Search by domain:</label>
+                                <div class="d-flex">
+                                    <input type="text" name="search" class="form-control" value="{{request('search')}}" placeholder="Enter domain name...">
+                                    <button type="submit" class="btn btn-primary ml-2">Search</button>
+                                    @if(request('search') || request('tag'))
+                                        <a href="{{route('domains.to.check')}}" class="btn btn-secondary ml-2">Clear</a>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-        @endif
         <div class="table-responsive">
             <form action="{{route('domain.checked')}}" method="POST">
                 @csrf
@@ -103,7 +114,11 @@
                 </table>
                 <button class="btn btn-warning my-4">Set domains checked</button>
             </form>
-            {{$domainsToCheck->links()}}
+            <div class="pagination-wrapper mt-4">
+                <div class="d-flex justify-content-center">
+                    {{$domainsToCheck->links()}}
+                </div>
+            </div>
         </div><!-- bd -->
     </div><!-- section-wrapper -->
 
