@@ -5,6 +5,7 @@ namespace App\Helpers;
 
 use App\AvalaibleDomain;
 use App\DomainToCheck;
+use Exception;
 use Illuminate\Support\Collection;
 
 class Helper
@@ -124,35 +125,44 @@ class Helper
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
 
-        if ($array['CommandResponse']['DomainCheckResult']) {
-            if (!empty($array['CommandResponse']['DomainCheckResult'])) {
-                foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
-                    if ($row['@attributes']['Available'] == "true") {
-                        if ($row['@attributes']['IsPremiumName'] == "true") {
-                            DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
+        try {
+            if ($array['CommandResponse']['DomainCheckResult']) {
+                if (!empty($array['CommandResponse']['DomainCheckResult'])) {
+                    foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
+                        if ($row['@attributes']['Available'] == "true") {
+                            if ($row['@attributes']['IsPremiumName'] == "true") {
+                                DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
+                            } else {
+                                var_dump('good domain ' . $row['@attributes']['Domain']);
+                                DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 1]);
+                            }
                         } else {
-                            var_dump('good domain ' . $row['@attributes']['Domain']);
-                            DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 1]);
+                            DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                         }
-                    } else {
-                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                     }
                 }
             }
+        }
+        catch (Exception $e) {
+            var_dump($e->getMessage());
         }
 
-        if ($array['Errors']) {
-            dd($array['Errors']);
-            if (!empty($array['Errors']['Error'])) {
-                foreach ($array['Errors']['Error'] as $error) {
-                    $domainFromError = explode("'", $error);
-                    var_dump($domainFromError);
-                    if (count($domainFromError) > 1) {
-                        DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
+        try {
+            if ($array['Errors']) {
+                if (!empty($array['Errors']['Error'])) {
+                    foreach ($array['Errors']['Error'] as $error) {
+                        $domainFromError = explode("'", $error);
+                        var_dump($domainFromError);
+                        if (count($domainFromError) > 1) {
+                            DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
+                        }
                     }
                 }
             }
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
         }
+
 
         sleep(5);
     }
