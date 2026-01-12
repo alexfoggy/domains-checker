@@ -5,7 +5,6 @@ namespace App\Helpers;
 
 use App\AvalaibleDomain;
 use App\DomainToCheck;
-use Exception;
 use Illuminate\Support\Collection;
 
 class Helper
@@ -126,28 +125,31 @@ class Helper
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
 
-//        try {
-        dd($array);
-            if ($array['CommandResponse']['DomainCheckResult']) {
-                foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
-                    if ($row['@attributes']['Available'] == "true") {
-                        if ($row['@attributes']['IsPremiumName'] == "true") {
-                            DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
-                        } else {
-                            var_dump('good domain ' . $row['@attributes']['Domain']);
-                            DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 1]);
-                        }
-                    } else {
+        if ($array['CommandResponse']['DomainCheckResult']) {
+            foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
+                if ($row['@attributes']['Available'] == "true") {
+                    if ($row['@attributes']['IsPremiumName'] == "true") {
                         DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
+                    } else {
+                        var_dump('good domain ' . $row['@attributes']['Domain']);
+                        DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 1]);
                     }
+                } else {
+                    DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
                 }
-            } else {
-                var_dump($array['Errors']);
-//            DomainToCheck::where('id', $domain->id)->update(['status' => 2]);
             }
-//        } catch (Exception $e) {
-//            var_dump('error occured');
-//        }
+        }
+
+        if ($array['Errors']) {
+            foreach ($array['Errors']['Error'] as $error) {
+                $domainFromError = explode("'", $error);
+                var_dump($domainFromError);
+                if (count($domainFromError) > 1) {
+                    DomainToCheck::where('domain', $domainFromError[1])->update(['status' => 2]);
+                }
+            }
+        }
+
         sleep(5);
     }
 }
