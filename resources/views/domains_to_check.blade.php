@@ -116,7 +116,7 @@
             </form>
             <div class="pagination-wrapper mt-4">
                 <div class="d-flex justify-content-center">
-                    {{$domainsToCheck->links()}}
+                    {{$domainsToCheck->links('pagination::bootstrap-4')}}
                 </div>
             </div>
         </div><!-- bd -->
