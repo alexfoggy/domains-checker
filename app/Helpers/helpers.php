@@ -105,6 +105,7 @@ class Helper
         foreach ($domains as $domain) {
             $clearedDomains[] = Helper::replaceForDomain($domain->domain, $checkSecondTime);
         }
+        dd(array_filter($clearedDomains));
 
         $domainsInList = implode(',', $clearedDomains);
         $domainsInList = str_replace("\r", '', $domainsInList);
@@ -125,7 +126,6 @@ class Helper
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
 
-        dd($array, $clearedDomains);
         if ($array['CommandResponse']['DomainCheckResult']) {
             foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
                 if ($row['@attributes']['Available'] == "true") {
