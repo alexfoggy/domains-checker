@@ -11,6 +11,16 @@
             </div>
         </div>
         <label class="section-title">Domains to check</label>
+        
+        @if(isset($domainsLast7Days))
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <strong>Statistics:</strong> <span class="badge badge-primary">{{$domainsLast7Days}}</span> domains added in the last 7 days
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="row justify-content-between align-items-center">
             <div class="col-12"><a href="{{route('domains')}}" class="btn btn-primary btn-block mg-b-10">Back</a></div>
