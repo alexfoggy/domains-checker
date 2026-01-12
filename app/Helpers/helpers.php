@@ -108,7 +108,7 @@ class Helper
         }
 
         $domainsInList = implode(',', $clearedDomains);
-
+        dd($domainsInList);
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://api.namecheap.com/xml.response?');
