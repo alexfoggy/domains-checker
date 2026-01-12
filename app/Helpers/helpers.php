@@ -106,8 +106,7 @@ class Helper
             $clearedDomains[] = Helper::replaceForDomain($domain->domain, $checkSecondTime);
         }
 
-        $domainsInList = implode(',', $clearedDomains);
-        $domainsInList = str_replace("\r", '', $domainsInList);
+        $domainsInList = implode(',', array_filter($clearedDomains));
 
         $ch = curl_init();
 
