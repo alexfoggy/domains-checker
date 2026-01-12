@@ -123,7 +123,7 @@ class Helper
         $xml = simplexml_load_string($server_output);
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
-        dd($array,$domainsInList);
+
         if ($array['CommandResponse']['DomainCheckResult']) {
             foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
                 if ($row['@attributes']['Available'] == "true") {
