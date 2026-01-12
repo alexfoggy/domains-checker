@@ -114,8 +114,7 @@ class Helper
         curl_setopt($ch, CURLOPT_URL, 'https://api.namecheap.com/xml.response?');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
-//                "ApiUser=muzikk1&ApiKey=3030ac784d204484a431328244e5206f&UserName=muzikk1&Command=namecheap.domains.check&ClientIp=178.168.61.197&DomainList=".$domain);
-            "ApiUser=muzikk1&ApiKey=4c283ba7de014ad3b00e820b09ea5e95&UserName=muzikk1&Command=namecheap.domains.check&ClientIp=217.76.55.111&DomainList=" . $domainsInList);
+            "ApiUser=domainboxx&ApiKey=3ef3399d09e043609a6dced679232bd5&UserName=domainboxx&Command=namecheap.domains.check&ClientIp=217.76.55.111&DomainList=" . $domainsInList);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
