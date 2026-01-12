@@ -7,13 +7,9 @@ use App\Domain;
 use App\DomainInfo;
 use App\DomainToCheck;
 use App\DomainToIgnore;
-use App\ParsedLink;
-use App\Parsing\Parsing;
-use Carbon\Carbon;
-use Html2Text\Html2Text;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -106,10 +102,17 @@ class HomeController extends Controller
         return view('domains_to_check', get_defined_vars());
     }
 
+    public function domainsToCheckRestart(): RedirectResponse
+    {
+        DomainToCheck::where('status', 2)->where('is_checked', 0)->update(['status' => 0]);
+
+        return redirect()->route('domains.to.check');
+    }
+
     public function domainsToCheckAvalibe()
     {
         $domainsToCheck = DomainToCheck::where('status', 1)
-        ->paginate(100);
+            ->paginate(100);
 
         return view('domains_to_check', get_defined_vars());
     }

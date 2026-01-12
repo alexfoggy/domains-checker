@@ -2,7 +2,13 @@
 
 @section('content')
     <div class="section-wrapper mg-t-20">
-        <div class=""><a href="{{route('domains.to.check.avalile')}}" class="btn btn-primary mb-4">Only available</a>
+        <div>
+            <div class=""><a href="{{route('domains.to.check.avalile')}}" class="btn btn-primary mb-4">Only
+                    available</a>
+            </div>
+            <div>
+                <a href="{{route('domains.to.check.restart')}}" class="btn btn-secondary mb-4">Restart verification</a>
+            </div>
         </div>
         <label class="section-title">Domains to check</label>
 
