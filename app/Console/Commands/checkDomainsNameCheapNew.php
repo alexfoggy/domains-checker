@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use App\AvalaibleDomain;
-use App\DomainToCheck;
+use App\Helpers\Helper;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 
 class checkDomainsNameCheapNew extends Command
 {
@@ -40,12 +39,12 @@ class checkDomainsNameCheapNew extends Command
      */
     public function handle()
     {
-        $domains = AvalaibleDomain::where('status',0)->orderBy('updated_at','DESC')->get();
+        $domains = AvalaibleDomain::where('status', 0)->orderBy('updated_at', 'DESC')->get();
 
         if ($domains) {
             foreach ($domains as $one_domain) {
                 if ($one_domain) {
-                    \App\Helpers\Helper::nameCheapCheck($one_domain);
+                    Helper::nameCheapCheck($one_domain);
                 }
             }
         }

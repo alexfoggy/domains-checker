@@ -11,10 +11,10 @@ class Helper
 {
     public static function replaceForDomain($domain, $status = false)
     {
-
         $domain = str_replace('https://', '', $domain);
         $domain = str_replace('www.', '', $domain);
         $domain = str_replace('/', '', $domain);
+        $domain = str_replace("\r", '', $domain);
 
         $domainArray = explode('.', $domain);
 

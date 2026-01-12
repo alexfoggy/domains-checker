@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use App\AvalaibleDomain;
-use App\DomainToCheck;
+use App\Helpers\Helper;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 
 class checkDomainsNameCheapAll extends Command
 {
@@ -14,7 +13,7 @@ class checkDomainsNameCheapAll extends Command
      *
      * @var string
      */
-        protected $signature = 'namecheap:checkall';
+    protected $signature = 'namecheap:checkall';
 
     /**
      * The console command description.
@@ -40,12 +39,12 @@ class checkDomainsNameCheapAll extends Command
      */
     public function handle()
     {
-        $domains = AvalaibleDomain::where('status',2)->orderBy('updated_at','DESC')->limit(1000)->get();
+        $domains = AvalaibleDomain::where('status', 2)->orderBy('updated_at', 'DESC')->limit(1000)->get();
 
         if ($domains) {
             foreach ($domains as $one_domain) {
                 if ($one_domain) {
-                    \App\Helpers\Helper::nameCheapCheck($one_domain);
+                    Helper::nameCheapCheck($one_domain);
                 }
             }
         }
