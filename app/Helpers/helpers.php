@@ -136,7 +136,7 @@ class Helper
                     }
                 } else {
                    $domain = DomainToCheck::where('domain', $row['@attributes']['Domain'])->first();
-                   dd($domain);
+                   dd($domain,$row['@attributes']['Domain']);
 //                   >update(['status' => 2]);
                 }
             }
