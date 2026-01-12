@@ -113,6 +113,7 @@ class HomeController extends Controller
         $domainsLast7Days = DomainToCheck::where('created_at', '>=', now()->subDays(7))->count();
         $domainsPending = DomainToCheck::where('status', 0)->count();
         $domainsDone = DomainToCheck::where('status', 1)->count();
+        $domainsTaken = DomainToCheck::where('status', 2)->count();
 
         return view('domains_to_check', get_defined_vars());
     }
@@ -141,6 +142,7 @@ class HomeController extends Controller
         $domainsLast7Days = DomainToCheck::where('created_at', '>=', now()->subDays(7))->count();
         $domainsPending = DomainToCheck::where('status', 0)->count();
         $domainsDone = DomainToCheck::where('status', 1)->count();
+        $domainsTaken = DomainToCheck::where('status', 2)->count();
 
         return view('domains_to_check', get_defined_vars());
     }

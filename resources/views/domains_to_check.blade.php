@@ -12,7 +12,7 @@
         </div>
         <label class="section-title">Domains to check</label>
         
-        @if(isset($domainsLast7Days) || isset($domainsPending) || isset($domainsDone))
+        @if(isset($domainsLast7Days) || isset($domainsPending) || isset($domainsDone) || isset($domainsTaken))
         <div class="row mb-3">
             <div class="col-12">
                 <div class="alert alert-info">
@@ -20,6 +20,7 @@
                     <span class="badge badge-primary ml-2">{{$domainsLast7Days ?? 0}}</span> domains added in the last 7 days
                     <span class="badge badge-warning ml-2">{{$domainsPending ?? 0}}</span> pending (status 0)
                     <span class="badge badge-success ml-2">{{$domainsDone ?? 0}}</span> done (status 1)
+                    <span class="badge badge-danger ml-2">{{$domainsTaken ?? 0}}</span> taken (status 2)
                 </div>
             </div>
         </div>
