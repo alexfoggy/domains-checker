@@ -142,6 +142,7 @@ class Helper
         }
 
         if ($array['Errors']) {
+            dd($array['Errors']);
             if (!empty($array['Errors']['Error'])) {
                 foreach ($array['Errors']['Error'] as $error) {
                     $domainFromError = explode("'", $error);
