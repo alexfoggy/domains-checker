@@ -39,7 +39,7 @@ class domainToCheckFromUploaded extends Command
      */
     public function handle()
     {
-        DomainToCheck::where('status', 0)->chunk(50, function ($domains) {
+        DomainToCheck::where('status', 0)->chunk(30, function ($domains) {
             Helper::nameCheapCheckFroMUploaded($domains);
         });
     }
