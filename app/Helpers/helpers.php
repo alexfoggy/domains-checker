@@ -127,7 +127,8 @@ class Helper
         $array = json_decode($json, TRUE);
 
 //        try {
-            if (!$array['Errors']) {
+        dd($array);
+            if ($array['CommandResponse']['DomainCheckResult']) {
                 foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
                     if ($row['@attributes']['Available'] == "true") {
                         if ($row['@attributes']['IsPremiumName'] == "true") {
@@ -141,7 +142,6 @@ class Helper
                     }
                 }
             } else {
-                var_dump('error occured');
                 var_dump($array['Errors']);
 //            DomainToCheck::where('id', $domain->id)->update(['status' => 2]);
             }
