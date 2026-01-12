@@ -7,6 +7,7 @@ use App\Domain;
 use App\DomainInfo;
 use App\DomainToCheck;
 use App\DomainToIgnore;
+use App\Helpers\Helper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -95,9 +96,16 @@ class HomeController extends Controller
         return redirect()->route('domainsToIgnore');
     }
 
-    public function domainsToCheck()
+    public function domainsToCheck(Request $request)
     {
-        $domainsToCheck = DomainToCheck::paginate(100);
+        $query = DomainToCheck::query();
+        
+        if ($request->has('tag') && $request->tag !== '') {
+            $query->where('tag', $request->tag);
+        }
+        
+        $domainsToCheck = $query->paginate(100)->appends($request->query());
+        $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
 
         return view('domains_to_check', get_defined_vars());
     }
@@ -109,10 +117,16 @@ class HomeController extends Controller
         return redirect()->route('domains.to.check');
     }
 
-    public function domainsToCheckAvalibe()
+    public function domainsToCheckAvalibe(Request $request)
     {
-        $domainsToCheck = DomainToCheck::where('status', 1)
-            ->paginate(100);
+        $query = DomainToCheck::where('status', 1);
+        
+        if ($request->has('tag') && $request->tag !== '') {
+            $query->where('tag', $request->tag);
+        }
+        
+        $domainsToCheck = $query->paginate(100)->appends($request->query());
+        $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
 
         return view('domains_to_check', get_defined_vars());
     }
@@ -137,18 +151,17 @@ class HomeController extends Controller
 
     public function domainsToCheckUpload(Request $request)
     {
-
         $domains = explode(PHP_EOL, $request->input('domains'));
+        $tag = $request->input('tag', 'agency');
 
         foreach ($domains as $domain) {
-            if (filter_var($domain, FILTER_VALIDATE_EMAIL)) {
-                // split on @ and return last value of array (the domain)
-                $domain = explode('@', $domain)[1];
-            }
-            if (!DomainToCheck::where('domain', $domain)->first()) {
+            $clearedDomain = Helper::cleanDomain($domain);
+
+            if (!DomainToCheck::where('domain', $clearedDomain)->first()) {
                 DomainToCheck::create([
-                    'domain' => $domain,
-                    'status' => 0
+                    'domain' => $clearedDomain,
+                    'status' => 0,
+                    'tag' => $tag
                 ]);
             }
         }

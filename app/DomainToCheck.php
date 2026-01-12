@@ -10,5 +10,5 @@ class DomainToCheck extends Model
 
     protected $table = 'domains_to_check';
 
-    protected $fillable = ['domain','status'];
+    protected $fillable = ['domain','status','tag'];
 }

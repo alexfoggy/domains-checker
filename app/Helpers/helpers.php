@@ -141,16 +141,42 @@ class Helper
         }
 
         if ($array['Errors']) {
-            foreach ($array['Errors']['Error'] as $error) {
-                $domainFromError = explode("'", $error);
-                var_dump($domainFromError);
-                if (count($domainFromError) > 1) {
-                    DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
+            if (!empty($array['Errors']['Error'])) {
+                foreach ($array['Errors']['Error'] as $error) {
+                    $domainFromError = explode("'", $error);
+                    var_dump($domainFromError);
+                    if (count($domainFromError) > 1) {
+                        DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
+                    }
                 }
             }
         }
 
         sleep(5);
+    }
+
+    public static function cleanDomain(string $line): string
+    {
+        $substrings_to_remove = [
+            "http://www2.",
+            "http://www.",
+            "http://",
+            "https://www.",
+            "https://",
+            "https",
+            "http",
+            "www"
+        ];
+
+        // Remove all unwanted substrings
+        $line = str_replace($substrings_to_remove, "", $line);
+
+        // If there's a /, take only the part before the first one
+        if (str_contains($line, '/')) {
+            $line = explode('/', $line)[0];
+        }
+
+        return trim($line);
     }
 }
 
