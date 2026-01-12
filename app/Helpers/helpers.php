@@ -109,7 +109,7 @@ class Helper
 
         $domainsInList = implode(',', $clearedDomains);
         $domainsInList = str_replace([' ','\r'], '', $domainsInList);
-        dd($domainsInList);
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, 'https://api.namecheap.com/xml.response?');
@@ -125,6 +125,7 @@ class Helper
         $xml = simplexml_load_string($server_output);
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
+        dd($array);
 
 //        try {
             if (!$array['Errors']) {
