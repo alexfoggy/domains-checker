@@ -129,28 +129,26 @@ class Helper
             foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
                 if ($row['@attributes']['Available'] == "true") {
                     if ($row['@attributes']['IsPremiumName'] == "true") {
-                        DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
+                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                     } else {
                         var_dump('good domain ' . $row['@attributes']['Domain']);
-                        DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 1]);
+                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 1]);
                     }
                 } else {
-                   $domain = DomainToCheck::where('domain', 'LIKE','%'.$row['@attributes']['Domain'].'%')->first();
-                   dd($domain,$row['@attributes']['Domain']);
-//                   >update(['status' => 2]);
+                    $domain = DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                 }
             }
         }
-//
-//        if ($array['Errors']) {
-//            foreach ($array['Errors']['Error'] as $error) {
-//                $domainFromError = explode("'", $error);
-//                var_dump($domainFromError);
-//                if (count($domainFromError) > 1) {
-//                    DomainToCheck::where('domain', $domainFromError[1])->update(['status' => 2]);
-//                }
-//            }
-//        }
+
+        if ($array['Errors']) {
+            foreach ($array['Errors']['Error'] as $error) {
+                $domainFromError = explode("'", $error);
+                var_dump($domainFromError);
+                if (count($domainFromError) > 1) {
+                    DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
+                }
+            }
+        }
 
         sleep(5);
     }
