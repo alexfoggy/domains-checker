@@ -108,7 +108,7 @@ class Helper
         }
 
         $domainsInList = implode(',', $clearedDomains);
-        $domainsInList = str_replace(' ', '', $domainsInList);
+        $domainsInList = str_replace([' ','\r'], '', $domainsInList);
         dd($domainsInList);
         $ch = curl_init();
 
