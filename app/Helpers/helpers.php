@@ -127,6 +127,7 @@ class Helper
 
         if ($array['CommandResponse']['DomainCheckResult']) {
             foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
+                dd(2);
                 if ($row['@attributes']['Available'] == "true") {
                     if ($row['@attributes']['IsPremiumName'] == "true") {
                         DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
@@ -135,6 +136,7 @@ class Helper
                         DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 1]);
                     }
                 } else {
+                    dd(1);
                     DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
                 }
             }
