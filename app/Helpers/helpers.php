@@ -125,6 +125,7 @@ class Helper
         $json = json_encode($xml);
         $array = json_decode($json, TRUE);
 
+        dd($array);
         if ($array['CommandResponse']['DomainCheckResult']) {
             foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
                 if ($row['@attributes']['Available'] == "true") {
