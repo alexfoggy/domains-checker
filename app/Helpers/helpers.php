@@ -105,7 +105,6 @@ class Helper
         foreach ($domains as $domain) {
             $clearedDomains[] = Helper::replaceForDomain($domain->domain, $checkSecondTime);
         }
-        dd(array_filter($clearedDomains));
 
         $domainsInList = implode(',', $clearedDomains);
         $domainsInList = str_replace("\r", '', $domainsInList);
