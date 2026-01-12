@@ -111,6 +111,8 @@ class HomeController extends Controller
         $domainsToCheck = $query->paginate(100)->appends($request->query());
         $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
         $domainsLast7Days = DomainToCheck::where('created_at', '>=', now()->subDays(7))->count();
+        $domainsPending = DomainToCheck::where('status', 0)->count();
+        $domainsDone = DomainToCheck::where('status', 1)->count();
 
         return view('domains_to_check', get_defined_vars());
     }
@@ -137,6 +139,8 @@ class HomeController extends Controller
         $domainsToCheck = $query->orderBy('is_checked')->paginate(100)->appends($request->query());
         $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
         $domainsLast7Days = DomainToCheck::where('created_at', '>=', now()->subDays(7))->count();
+        $domainsPending = DomainToCheck::where('status', 0)->count();
+        $domainsDone = DomainToCheck::where('status', 1)->count();
 
         return view('domains_to_check', get_defined_vars());
     }
