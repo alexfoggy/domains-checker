@@ -135,7 +135,9 @@ class Helper
                         DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 1]);
                     }
                 } else {
-                    DomainToCheck::where('domain', $row['@attributes']['Domain'])->update(['status' => 2]);
+                   $domain = DomainToCheck::where('domain', $row['@attributes']['Domain'])->first();
+                   dd($domain);
+//                   >update(['status' => 2]);
                 }
             }
         }
