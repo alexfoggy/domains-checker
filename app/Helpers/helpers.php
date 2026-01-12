@@ -125,16 +125,18 @@ class Helper
         $array = json_decode($json, TRUE);
 
         if ($array['CommandResponse']['DomainCheckResult']) {
-            foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
-                if ($row['@attributes']['Available'] == "true") {
-                    if ($row['@attributes']['IsPremiumName'] == "true") {
-                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
+            if (!empty($array['CommandResponse']['DomainCheckResult'])) {
+                foreach ($array['CommandResponse']['DomainCheckResult'] as $row) {
+                    if ($row['@attributes']['Available'] == "true") {
+                        if ($row['@attributes']['IsPremiumName'] == "true") {
+                            DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
+                        } else {
+                            var_dump('good domain ' . $row['@attributes']['Domain']);
+                            DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 1]);
+                        }
                     } else {
-                        var_dump('good domain ' . $row['@attributes']['Domain']);
-                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 1]);
+                        DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                     }
-                } else {
-                    DomainToCheck::where('domain', 'LIKE', '%' . $row['@attributes']['Domain'] . '%')->update(['status' => 2]);
                 }
             }
         }
