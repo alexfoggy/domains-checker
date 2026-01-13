@@ -43,7 +43,6 @@ class domainCleaner extends Command
             $item->domain = trim($item->domain);
         });
         $domains->groupBy('domain')->filter(function ($item) use ($doublicates) {
-            dd($item);
             if ($item->count() > 1) {
                 dd(1);
                 $doublicates->push($item);
