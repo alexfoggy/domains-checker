@@ -102,6 +102,7 @@ class Helper
     public static function nameCheapCheckFroMUploaded(Collection $domains, $checkSecondTime = false)
     {
         $clearedDomains = [];
+        dd($domains);
 
         foreach ($domains as $domain) {
             $clearedDomains[] = Helper::replaceForDomain($domain->domain, $checkSecondTime);
