@@ -158,6 +158,19 @@ class HomeController extends Controller
         return back();
     }
 
+    public function updateDomainTag(Request $request, $id)
+    {
+        $request->validate([
+            'tag' => 'required|string|max:255'
+        ]);
+
+        $domain = DomainToCheck::findOrFail($id);
+        $domain->tag = $request->input('tag');
+        $domain->save();
+
+        return response()->json(['success' => true, 'message' => 'Tag updated successfully']);
+    }
+
     public function domainsFree()
     {
         $domain = '';

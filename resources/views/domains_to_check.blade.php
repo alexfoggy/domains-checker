@@ -108,7 +108,17 @@
                                 <a href="https://app.ahrefs.com/site-explorer/overview/v2/subdomains/live?target={{$domain->domain}}"
                                    target="_blank">{{$domain->domain}}</a></td>
                             <td>
-                                <span class="badge badge-info">{{$domain->tag ?? 'agency'}}</span>
+                                <div class="tag-edit-container" data-domain-id="{{$domain->id}}">
+                                    <span class="tag-display">
+                                        <span class="badge badge-info">{{$domain->tag ?? 'agency'}}</span>
+                                        <button type="button" class="btn btn-sm btn-link p-0 ml-1 edit-tag-btn" style="font-size: 12px;">✏️</button>
+                                    </span>
+                                    <span class="tag-edit" style="display: none;">
+                                        <input type="text" class="form-control form-control-sm d-inline-block" style="width: 120px;" value="{{$domain->tag ?? 'agency'}}" data-original-tag="{{$domain->tag ?? 'agency'}}">
+                                        <button type="button" class="btn btn-sm btn-success save-tag-btn ml-1">Save</button>
+                                        <button type="button" class="btn btn-sm btn-secondary cancel-tag-btn ml-1">Cancel</button>
+                                    </span>
+                                </div>
                             </td>
                             <td align="right">
                                 @if($domain->is_checked)
@@ -147,6 +157,85 @@
                 $(':checkbox').each(function () {
                     this.checked = false;
                 });
+            }
+        });
+
+        // Tag editing functionality
+        $(document).on('click', '.edit-tag-btn', function() {
+            const container = $(this).closest('.tag-edit-container');
+            container.find('.tag-display').hide();
+            container.find('.tag-edit').show();
+            container.find('input').focus();
+        });
+
+        $(document).on('click', '.cancel-tag-btn', function() {
+            const container = $(this).closest('.tag-edit-container');
+            const input = container.find('input');
+            input.val(input.data('original-tag'));
+            container.find('.tag-edit').hide();
+            container.find('.tag-display').show();
+        });
+
+        $(document).on('click', '.save-tag-btn', function() {
+            const container = $(this).closest('.tag-edit-container');
+            const domainId = container.data('domain-id');
+            const newTag = container.find('input').val().trim();
+            const originalTag = container.find('input').data('original-tag');
+            const saveBtn = $(this);
+            const cancelBtn = container.find('.cancel-tag-btn');
+
+            if (newTag === '') {
+                alert('Tag cannot be empty');
+                return;
+            }
+
+            if (newTag === originalTag) {
+                container.find('.tag-edit').hide();
+                container.find('.tag-display').show();
+                return;
+            }
+
+            // Disable buttons during save
+            saveBtn.prop('disabled', true).text('Saving...');
+            cancelBtn.prop('disabled', true);
+
+            $.ajax({
+                url: '/domain/' + domainId + '/update-tag',
+                method: 'POST',
+                data: {
+                    _token: '{{csrf_token()}}',
+                    tag: newTag
+                },
+                success: function(response) {
+                    // Update the badge text
+                    container.find('.badge-info').text(newTag);
+                    container.find('input').data('original-tag', newTag);
+                    container.find('.tag-edit').hide();
+                    container.find('.tag-display').show();
+                },
+                error: function(xhr) {
+                    alert('Error updating tag. Please try again.');
+                    saveBtn.prop('disabled', false).text('Save');
+                    cancelBtn.prop('disabled', false);
+                },
+                complete: function() {
+                    saveBtn.prop('disabled', false).text('Save');
+                    cancelBtn.prop('disabled', false);
+                }
+            });
+        });
+
+        // Allow Enter key to save
+        $(document).on('keypress', '.tag-edit input', function(e) {
+            if (e.which === 13) {
+                $(this).closest('.tag-edit-container').find('.save-tag-btn').click();
+            }
+        });
+
+        // Allow Escape key to cancel
+        $(document).on('keydown', '.tag-edit input', function(e) {
+            if (e.which === 27) {
+                $(this).closest('.tag-edit-container').find('.cancel-tag-btn').click();
             }
         });
     </script>
