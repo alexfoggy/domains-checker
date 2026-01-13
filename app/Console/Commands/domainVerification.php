@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\DomainToCheck;
 use Illuminate\Console\Command;
 
-class domainCleaner extends Command
+class domainVerification extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'domains:clear';
+    protected $signature = 'domains:verify';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command start removing double domains';
+    protected $description = 'This command start verifying domains';
 
     /**
      * Create a new command instance.
@@ -38,13 +38,18 @@ class domainCleaner extends Command
      */
     public function handle()
     {
+        $results = collect();
         $domains = DomainToCheck::all()->each(function ($item) {
             $item->domain = trim($item->domain);
         });
-        $domains->groupBy('domain')->filter(function ($item) {
-            if ($item->count() > 1) {
-                $item->last()->delete();
+
+        foreach ($domains as $domain) {
+            // need check if domain is really domain, not text
+            if(!filter_var($domain->domain, FILTER_VALIDATE_DOMAIN)){
+               $results->push($domain->domain);
             }
-        });
+        }
+
+        return $results;
     }
 }
