@@ -48,6 +48,6 @@ class domainCleaner extends Command
             }
         });
 
-        dd($doublicates->pluck('domain'));
+        dd($doublicates);
     }
 }
