@@ -40,13 +40,11 @@ class domainCleaner extends Command
     {
         $doublicates = collect();
         $domains = DomainToCheck::all();
-        $domains->groupBy('domain');
-        dd($domains->count());
-        foreach ($domains as $domain_group) {
-            if ($domain_group->count() > 1) {
-                $doublicates->push($domain_group);
+        $domains->groupBy('domain')->filter(function ($item) use ($doublicates) {
+            if ($item->count() > 1) {
+                $doublicates->push($item);
             }
-        }
+        });
 
         dd($doublicates->pluck('domain'));
     }
