@@ -39,7 +39,9 @@ class domainCleaner extends Command
     public function handle()
     {
         $doublicates = collect();
-        $domains = DomainToCheck::all();
+        $domains = DomainToCheck::all()->each(function ($item) {
+            $item->domain = trim($item->domain);
+        });
         $domains->groupBy('domain')->filter(function ($item) use ($doublicates) {
             dd($item);
             if ($item->count() > 1) {
