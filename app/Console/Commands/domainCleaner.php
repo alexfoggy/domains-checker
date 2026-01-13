@@ -38,14 +38,17 @@ class domainCleaner extends Command
      */
     public function handle()
     {
-        $doublicates = collect();
         $domains = DomainToCheck::all()->each(function ($item) {
             $item->domain = trim($item->domain);
         });
-        $domains->groupBy('domain')->filter(function ($item) use ($doublicates) {
+        $count = 0;
+        $domains->groupBy('domain')->filter(function ($item) use ($count) {
             if ($item->count() > 1) {
+                $count++;
                 $item->last()->delete();
             }
         });
+
+        var_dump($count. ' domains removed');
     }
 }
