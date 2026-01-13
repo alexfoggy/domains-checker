@@ -44,10 +44,10 @@ class domainCleaner extends Command
         });
         $domains->groupBy('domain')->filter(function ($item) use ($doublicates) {
             if ($item->count() > 1) {
-                $doublicates->push($item);
+                $doublicates->push($item->last());
             }
         });
 
-        dd($doublicates);
+        dd($doublicates->pluck('domain'));
     }
 }
