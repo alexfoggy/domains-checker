@@ -154,6 +154,7 @@ class Helper
                         $domainFromError = explode("'", $error);
                         var_dump($domainFromError);
                         if (count($domainFromError) > 1) {
+                            dd(1);
                             DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
                         }
                     }
