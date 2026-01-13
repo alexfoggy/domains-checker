@@ -100,7 +100,7 @@ class HomeController extends Controller
     {
         $query = DomainToCheck::query();
 
-        if ($request->has('tag') && $request->tag !== '') {
+        if ($request->has('tag') && $request->tag) {
             $query->where('tag', $request->tag);
         }
 
