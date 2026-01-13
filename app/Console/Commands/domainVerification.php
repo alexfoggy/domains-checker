@@ -46,7 +46,7 @@ class domainVerification extends Command
         foreach ($domains as $domain) {
             // need check if domain is really domain, not text
             if (count(explode('.', $domain->domain)) < 2) {
-                $results->push($domain->domain);
+                $results->push($domain);
             }
         }
 
