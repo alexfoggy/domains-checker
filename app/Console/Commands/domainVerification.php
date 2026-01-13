@@ -45,11 +45,11 @@ class domainVerification extends Command
 
         foreach ($domains as $domain) {
             // need check if domain is really domain, not text
-            if(!filter_var($domain->domain, FILTER_VALIDATE_DOMAIN)){
-               $results->push($domain->domain);
+            if (!filter_var($domain->domain, FILTER_VALIDATE_DOMAIN)) {
+                $results->push($domain->domain);
             }
         }
 
-        return $results;
+        dd($results);
     }
 }
