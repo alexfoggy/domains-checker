@@ -147,96 +147,129 @@
     </div><!-- section-wrapper -->
 
     <script>
-        let button = document.querySelector('.checkAll');
-        button.addEventListener('click', function (e) {
-            if (button.checked) {
-                $(':checkbox').each(function () {
-                    this.checked = true;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check all functionality
+            let button = document.querySelector('.checkAll');
+            if (button) {
+                button.addEventListener('click', function (e) {
+                    const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(.checkAll)');
+                    checkboxes.forEach(function(checkbox) {
+                        checkbox.checked = button.checked;
+                    });
                 });
-            } else {
-                $(':checkbox').each(function () {
-                    this.checked = false;
-                });
-            }
-        });
-
-        // Tag editing functionality
-        $(document).on('click', '.edit-tag-btn', function() {
-            const container = $(this).closest('.tag-edit-container');
-            container.find('.tag-display').hide();
-            container.find('.tag-edit').show();
-            container.find('input').focus();
-        });
-
-        $(document).on('click', '.cancel-tag-btn', function() {
-            const container = $(this).closest('.tag-edit-container');
-            const input = container.find('input');
-            input.val(input.data('original-tag'));
-            container.find('.tag-edit').hide();
-            container.find('.tag-display').show();
-        });
-
-        $(document).on('click', '.save-tag-btn', function() {
-            const container = $(this).closest('.tag-edit-container');
-            const domainId = container.data('domain-id');
-            const newTag = container.find('input').val().trim();
-            const originalTag = container.find('input').data('original-tag');
-            const saveBtn = $(this);
-            const cancelBtn = container.find('.cancel-tag-btn');
-
-            if (newTag === '') {
-                alert('Tag cannot be empty');
-                return;
             }
 
-            if (newTag === originalTag) {
-                container.find('.tag-edit').hide();
-                container.find('.tag-display').show();
-                return;
-            }
+            // Tag editing functionality
+            document.addEventListener('click', function(e) {
+                // Edit button
+                if (e.target.classList.contains('edit-tag-btn') || e.target.closest('.edit-tag-btn')) {
+                    const btn = e.target.classList.contains('edit-tag-btn') ? e.target : e.target.closest('.edit-tag-btn');
+                    const container = btn.closest('.tag-edit-container');
+                    const display = container.querySelector('.tag-display');
+                    const edit = container.querySelector('.tag-edit');
+                    const input = container.querySelector('input');
+                    
+                    display.style.display = 'none';
+                    edit.style.display = 'inline-block';
+                    input.focus();
+                }
 
-            // Disable buttons during save
-            saveBtn.prop('disabled', true).text('Saving...');
-            cancelBtn.prop('disabled', true);
+                // Cancel button
+                if (e.target.classList.contains('cancel-tag-btn') || e.target.closest('.cancel-tag-btn')) {
+                    const btn = e.target.classList.contains('cancel-tag-btn') ? e.target : e.target.closest('.cancel-tag-btn');
+                    const container = btn.closest('.tag-edit-container');
+                    const display = container.querySelector('.tag-display');
+                    const edit = container.querySelector('.tag-edit');
+                    const input = container.querySelector('input');
+                    const originalTag = input.getAttribute('data-original-tag');
+                    
+                    input.value = originalTag;
+                    edit.style.display = 'none';
+                    display.style.display = 'inline-block';
+                }
 
-            $.ajax({
-                url: '/domain/' + domainId + '/update-tag',
-                method: 'POST',
-                data: {
-                    _token: '{{csrf_token()}}',
-                    tag: newTag
-                },
-                success: function(response) {
-                    // Update the badge text
-                    container.find('.badge-info').text(newTag);
-                    container.find('input').data('original-tag', newTag);
-                    container.find('.tag-edit').hide();
-                    container.find('.tag-display').show();
-                },
-                error: function(xhr) {
-                    alert('Error updating tag. Please try again.');
-                    saveBtn.prop('disabled', false).text('Save');
-                    cancelBtn.prop('disabled', false);
-                },
-                complete: function() {
-                    saveBtn.prop('disabled', false).text('Save');
-                    cancelBtn.prop('disabled', false);
+                // Save button
+                if (e.target.classList.contains('save-tag-btn') || e.target.closest('.save-tag-btn')) {
+                    const btn = e.target.classList.contains('save-tag-btn') ? e.target : e.target.closest('.save-tag-btn');
+                    const container = btn.closest('.tag-edit-container');
+                    const domainId = container.getAttribute('data-domain-id');
+                    const input = container.querySelector('input');
+                    const newTag = input.value.trim();
+                    const originalTag = input.getAttribute('data-original-tag');
+                    const cancelBtn = container.querySelector('.cancel-tag-btn');
+                    const badge = container.querySelector('.badge-info');
+
+                    if (newTag === '') {
+                        alert('Tag cannot be empty');
+                        return;
+                    }
+
+                    if (newTag === originalTag) {
+                        container.querySelector('.tag-edit').style.display = 'none';
+                        container.querySelector('.tag-display').style.display = 'inline-block';
+                        return;
+                    }
+
+                    // Disable buttons during save
+                    btn.disabled = true;
+                    btn.textContent = 'Saving...';
+                    cancelBtn.disabled = true;
+
+                    // Create form data
+                    const formData = new FormData();
+                    formData.append('_token', '{{csrf_token()}}');
+                    formData.append('tag', newTag);
+
+                    // Make AJAX request
+                    fetch('/domain/' + domainId + '/update-tag', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update the badge text
+                            badge.textContent = newTag;
+                            input.setAttribute('data-original-tag', newTag);
+                            container.querySelector('.tag-edit').style.display = 'none';
+                            container.querySelector('.tag-display').style.display = 'inline-block';
+                        } else {
+                            alert('Error updating tag. Please try again.');
+                            btn.disabled = false;
+                            btn.textContent = 'Save';
+                            cancelBtn.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error updating tag. Please try again.');
+                        btn.disabled = false;
+                        btn.textContent = 'Save';
+                        cancelBtn.disabled = false;
+                    });
                 }
             });
-        });
 
-        // Allow Enter key to save
-        $(document).on('keypress', '.tag-edit input', function(e) {
-            if (e.which === 13) {
-                $(this).closest('.tag-edit-container').find('.save-tag-btn').click();
-            }
-        });
+            // Allow Enter key to save
+            document.addEventListener('keypress', function(e) {
+                if (e.target.matches('.tag-edit input')) {
+                    if (e.key === 'Enter') {
+                        e.target.closest('.tag-edit-container').querySelector('.save-tag-btn').click();
+                    }
+                }
+            });
 
-        // Allow Escape key to cancel
-        $(document).on('keydown', '.tag-edit input', function(e) {
-            if (e.which === 27) {
-                $(this).closest('.tag-edit-container').find('.cancel-tag-btn').click();
-            }
+            // Allow Escape key to cancel
+            document.addEventListener('keydown', function(e) {
+                if (e.target.matches('.tag-edit input')) {
+                    if (e.key === 'Escape') {
+                        e.target.closest('.tag-edit-container').querySelector('.cancel-tag-btn').click();
+                    }
+                }
+            });
         });
     </script>
 @endsection
