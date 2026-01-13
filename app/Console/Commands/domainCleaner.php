@@ -41,6 +41,7 @@ class domainCleaner extends Command
         $doublicates = collect();
         $domains = DomainToCheck::all();
         $domains->groupBy('domain');
+        dd($domains->count());
         foreach ($domains as $domain_group) {
             if ($domain_group->count() > 1) {
                 $doublicates->push($domain_group);
