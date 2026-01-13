@@ -102,7 +102,6 @@ class Helper
     public static function nameCheapCheckFroMUploaded(Collection $domains, $checkSecondTime = false)
     {
         $clearedDomains = [];
-        dd($domains);
 
         foreach ($domains as $domain) {
             $clearedDomains[] = Helper::replaceForDomain($domain->domain, $checkSecondTime);
@@ -143,8 +142,7 @@ class Helper
                     }
                 }
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             var_dump($e->getMessage());
         }
 
@@ -155,8 +153,7 @@ class Helper
                         $domainFromError = explode("'", $error);
                         var_dump($domainFromError);
                         if (count($domainFromError) > 1) {
-                            $domain = DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->first();
-                            dd($domain);
+                            DomainToCheck::where('domain', 'LIKE', '%' . $domainFromError[1] . '%')->update(['status' => 2]);
                         }
                     }
                 }
