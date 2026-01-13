@@ -38,12 +38,15 @@ class domainCleaner extends Command
      */
     public function handle()
     {
+        $doublicates = collect();
         $domains = DomainToCheck::all();
         $domains->groupBy('domain');
         foreach ($domains as $domain_group) {
             if ($domain_group->count() > 1) {
-                dd($domain_group);
+                $doublicates->push($domain_group);
             }
         }
+
+        dd($doublicates);
     }
 }
