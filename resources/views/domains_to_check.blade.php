@@ -64,10 +64,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label">Tag: <span class="tx-danger">*</span></label>
+                        <label class="form-control-label">Tag:</label>
                         <div>
-                            <input class="form-control" type="text" name="tag" value="{{old('tag', 'agency')}}"
-                                   placeholder="Enter tag (e.g., agency)">
+                            <input class="form-control" type="text" name="tag" value="{{old('tag', '')}}"
+                                   placeholder="Enter tag (optional)">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mt-2">Upload</button>
@@ -135,11 +135,15 @@
                             <td>
                                 <div class="tag-edit-container" data-domain-id="{{$domain->id}}">
                                     <span class="tag-display">
-                                        <span class="badge badge-info">{{$domain->tag ?? 'agency'}}</span>
+                                        @if($domain->tag)
+                                            <span class="badge badge-info">{{$domain->tag}}</span>
+                                        @else
+                                            <span class="badge badge-secondary">No tag</span>
+                                        @endif
                                         <button type="button" class="btn btn-sm btn-link p-0 ml-1 edit-tag-btn" style="font-size: 12px;">✏️</button>
                                     </span>
                                     <span class="tag-edit" style="display: none;">
-                                        <input type="text" class="form-control form-control-sm d-inline-block" style="width: 120px;" value="{{$domain->tag ?? 'agency'}}" data-original-tag="{{$domain->tag ?? 'agency'}}">
+                                        <input type="text" class="form-control form-control-sm d-inline-block" style="width: 120px;" value="{{$domain->tag ?? ''}}" data-original-tag="{{$domain->tag ?? ''}}">
                                         <button type="button" class="btn btn-sm btn-success save-tag-btn ml-1">Save</button>
                                         <button type="button" class="btn btn-sm btn-secondary cancel-tag-btn ml-1">Cancel</button>
                                     </span>
@@ -233,18 +237,13 @@
                     const domainId = container.getAttribute('data-domain-id');
                     const input = container.querySelector('input');
                     const newTag = input.value.trim();
-                    const originalTag = input.getAttribute('data-original-tag');
+                    const originalTag = input.getAttribute('data-original-tag') || '';
                     const cancelBtn = container.querySelector('.cancel-tag-btn');
-                    const badge = container.querySelector('.badge-info');
-
-                    if (newTag === '') {
-                        alert('Tag cannot be empty');
-                        return;
-                    }
+                    const display = container.querySelector('.tag-display');
 
                     if (newTag === originalTag) {
                         container.querySelector('.tag-edit').style.display = 'none';
-                        container.querySelector('.tag-display').style.display = 'inline-block';
+                        display.style.display = 'inline-block';
                         return;
                     }
 
@@ -269,11 +268,30 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Update the badge text
-                            badge.textContent = newTag;
+                            // Update the display
+                            const existingBadge = display.querySelector('.badge');
+                            if (existingBadge) {
+                                existingBadge.remove();
+                            }
+                            
+                            if (newTag === '') {
+                                // Add "No tag" badge
+                                const noTagBadge = document.createElement('span');
+                                noTagBadge.className = 'badge badge-secondary';
+                                noTagBadge.textContent = 'No tag';
+                                const editBtn = display.querySelector('.edit-tag-btn');
+                                display.insertBefore(noTagBadge, editBtn);
+                            } else {
+                                // Add tag badge
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'badge badge-info';
+                                newBadge.textContent = newTag;
+                                const editBtn = display.querySelector('.edit-tag-btn');
+                                display.insertBefore(newBadge, editBtn);
+                            }
                             input.setAttribute('data-original-tag', newTag);
                             container.querySelector('.tag-edit').style.display = 'none';
-                            container.querySelector('.tag-display').style.display = 'inline-block';
+                            display.style.display = 'inline-block';
                         } else {
                             alert('Error updating tag. Please try again.');
                             btn.disabled = false;

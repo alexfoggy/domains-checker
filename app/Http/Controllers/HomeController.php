@@ -161,11 +161,12 @@ class HomeController extends Controller
     public function updateDomainTag(Request $request, $id)
     {
         $request->validate([
-            'tag' => 'required|string|max:255'
+            'tag' => 'nullable|string|max:255'
         ]);
 
         $domain = DomainToCheck::findOrFail($id);
-        $domain->tag = $request->input('tag');
+        $tag = $request->input('tag');
+        $domain->tag = !empty(trim($tag)) ? trim($tag) : null;
         $domain->save();
 
         return response()->json(['success' => true, 'message' => 'Tag updated successfully']);
@@ -181,7 +182,8 @@ class HomeController extends Controller
     public function domainsToCheckUpload(Request $request)
     {
         $domains = explode(PHP_EOL, $request->input('domains'));
-        $tag = $request->input('tag', 'agency');
+        $tag = $request->input('tag');
+        $tag = !empty(trim($tag)) ? trim($tag) : null;
         $newDomainsCount = 0;
         $totalProcessed = 0;
 
