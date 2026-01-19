@@ -182,9 +182,17 @@ class HomeController extends Controller
     {
         $domains = explode(PHP_EOL, $request->input('domains'));
         $tag = $request->input('tag', 'agency');
+        $newDomainsCount = 0;
+        $totalProcessed = 0;
 
         foreach ($domains as $domain) {
             $clearedDomain = Helper::cleanDomain($domain);
+            
+            if (empty($clearedDomain)) {
+                continue;
+            }
+            
+            $totalProcessed++;
 
             if (!DomainToCheck::where('domain', $clearedDomain)->first()) {
                 DomainToCheck::create([
@@ -192,10 +200,14 @@ class HomeController extends Controller
                     'status' => 0,
                     'tag' => $tag
                 ]);
+                $newDomainsCount++;
             }
         }
 
-        return redirect()->route('domains.to.check');
+        return redirect()->route('domains.to.check')
+            ->with('upload_success', true)
+            ->with('new_domains_count', $newDomainsCount)
+            ->with('total_processed', $totalProcessed);
     }
 
     public function priotiry($id)

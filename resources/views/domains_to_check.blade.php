@@ -1,6 +1,31 @@
 @extends('layouts.index')
 
 @section('content')
+    @if(session('upload_success'))
+    <!-- Upload Success Modal -->
+    <div class="modal fade show" id="uploadSuccessModal" tabindex="-1" role="dialog" style="display: block; padding-right: 17px;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Successful</h5>
+                    <button type="button" class="close" onclick="closeUploadModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>{{session('new_domains_count')}}</strong> new unique domain(s) were added successfully.</p>
+                    @if(session('total_processed') > session('new_domains_count'))
+                        <p class="text-muted">Total processed: {{session('total_processed')}} ({{session('total_processed') - session('new_domains_count')}} were duplicates)</p>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="closeUploadModal()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" id="uploadModalBackdrop"></div>
+    @endif
     <div class="section-wrapper mg-t-20">
         <div>
             <div class=""><a href="{{route('domains.to.check.avalile', request()->only(['tag', 'search']))}}" class="btn btn-primary mb-4">Only
@@ -147,11 +172,24 @@
     </div><!-- section-wrapper -->
 
     <script>
+        // Function to close upload success modal
+        function closeUploadModal() {
+            const modal = document.getElementById('uploadSuccessModal');
+            const backdrop = document.getElementById('uploadModalBackdrop');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+            }
+            if (backdrop) {
+                backdrop.remove();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Check all functionality
-            let button = document.querySelector('.checkAll');
+        let button = document.querySelector('.checkAll');
             if (button) {
-                button.addEventListener('click', function (e) {
+        button.addEventListener('click', function (e) {
                     const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(.checkAll)');
                     checkboxes.forEach(function(checkbox) {
                         checkbox.checked = button.checked;
