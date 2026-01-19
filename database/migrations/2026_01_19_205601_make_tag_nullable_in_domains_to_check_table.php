@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class MakeTagNullableInDomainsToCheckTable extends Migration
 {
@@ -13,9 +12,7 @@ class MakeTagNullableInDomainsToCheckTable extends Migration
      */
     public function up()
     {
-        Schema::table('domains_to_check', function (Blueprint $table) {
-            $table->string('tag')->nullable()->change();
-        });
+        DB::statement('ALTER TABLE `domains_to_check` MODIFY COLUMN `tag` VARCHAR(255) NULL');
     }
 
     /**
@@ -25,8 +22,6 @@ class MakeTagNullableInDomainsToCheckTable extends Migration
      */
     public function down()
     {
-        Schema::table('domains_to_check', function (Blueprint $table) {
-            $table->string('tag')->default('agency')->change();
-        });
+        DB::statement("ALTER TABLE `domains_to_check` MODIFY COLUMN `tag` VARCHAR(255) NOT NULL DEFAULT 'agency'");
     }
 }
