@@ -181,9 +181,12 @@ class HomeController extends Controller
 
     public function domainsToCheckUpload(Request $request)
     {
+        $request->validate([
+            'tag' => 'required|string|max:255'
+        ]);
+
         $domains = explode(PHP_EOL, $request->input('domains'));
-        $tag = $request->input('tag');
-        $tag = !empty(trim($tag)) ? trim($tag) : null;
+        $tag = trim($request->input('tag'));
         $newDomainsCount = 0;
         $totalProcessed = 0;
 

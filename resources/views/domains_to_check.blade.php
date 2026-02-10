@@ -64,10 +64,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label">Tag:</label>
+                        <label class="form-control-label">Tag: <span class="tx-danger">*</span></label>
                         <div>
                             <input class="form-control" type="text" name="tag" value="{{old('tag', '')}}"
-                                   placeholder="Enter tag (optional)">
+                                   placeholder="Enter tag" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mt-2">Upload</button>
