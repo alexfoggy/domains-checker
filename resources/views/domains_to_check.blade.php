@@ -30,7 +30,9 @@
         <div>
             <div class=""><a href="{{route('domains.to.check.avalile', request()->only(['tag', 'search']))}}" class="btn btn-primary mb-4">Only
                     available</a>
-                @if(Route::currentRouteName() === 'domains.to.check.avalile')
+                @if(Route::currentRouteName() === 'domains.to.check')
+                    <a href="{{ route('domains.to.check.export', request()->only(['tag', 'search'])) }}" target="_blank" rel="noopener noreferrer" class="btn btn-success mb-4 ml-2">Export</a>
+                @elseif(Route::currentRouteName() === 'domains.to.check.avalile')
                     <a href="{{ route('domains.to.check.avalile.export', request()->only(['tag', 'search'])) }}" target="_blank" rel="noopener noreferrer" class="btn btn-success mb-4 ml-2">Export</a>
                 @endif
             </div>

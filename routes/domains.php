@@ -18,6 +18,7 @@ Route::get('/details/status/{domain}/{status}', 'HomeController@domainChangeStat
 Route::get('/home', 'HomeController@index')->name('home');
 
 
+Route::get('/domainstocheck/export', 'HomeController@domainsToCheckExport')->name('domains.to.check.export');
 Route::get('/domainstocheck', 'HomeController@domainsToCheck')->name('domains.to.check');
 Route::get('/domainstocheck-restart', 'HomeController@domainsToCheckRestart')->name('domains.to.check.restart');
 Route::get('/domainsavalible/export', 'HomeController@domainsToCheckAvalibeExport')->name('domains.to.check.avalile.export');
