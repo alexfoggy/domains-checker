@@ -20,6 +20,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/domainstocheck', 'HomeController@domainsToCheck')->name('domains.to.check');
 Route::get('/domainstocheck-restart', 'HomeController@domainsToCheckRestart')->name('domains.to.check.restart');
+Route::get('/domainsavalible/export', 'HomeController@domainsToCheckAvalibeExport')->name('domains.to.check.avalile.export');
 Route::get('/domainsavalible', 'HomeController@domainsToCheckAvalibe')->name('domains.to.check.avalile');
 Route::get('/list/free', 'HomeController@domainsFree')->name('domains.to.free');
 Route::post('/domainstocheck/create', 'HomeController@domainsToCheckUpload')->name('domains.to.create');

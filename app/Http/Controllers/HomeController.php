@@ -147,6 +147,25 @@ class HomeController extends Controller
         return view('domains_to_check', get_defined_vars());
     }
 
+    public function domainsToCheckAvalibeExport(Request $request)
+    {
+        $query = DomainToCheck::where('status', 1);
+
+        if ($request->has('tag') && $request->tag !== '') {
+            $query->where('tag', $request->tag);
+        }
+
+        if ($request->has('search') && $request->search !== '') {
+            $query->where('domain', 'like', '%' . $request->search . '%');
+        }
+
+        $domains = $query->orderBy('is_checked')->orderBy('id')->pluck('domain');
+
+        return response(implode("\n", $domains->all()), 200, [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+        ]);
+    }
+
     public function checkedUpdateStatus(Request $request)
     {
         $checkbox = $request->input('checkbox');
