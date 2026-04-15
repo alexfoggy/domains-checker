@@ -38,8 +38,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Domain</th>
-                    <th>Domain rationg</th>
+                    <th>Domain raiting</th>
                     <th>Hunter synced</th>
+                    <th>Found emails</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,7 +48,7 @@
                     <tr>
                         <td>{{$lead->id}}</td>
                         <td>{{$lead->domain}}</td>
-                        <td>{{$lead->domain_rationg ?? '-'}}</td>
+                        <td>{{$lead->domain_raiting ?? '-'}}</td>
                         <td>
                             @if($lead->is_hunter_synced)
                                 <span class="badge badge-success">Yes</span>
@@ -55,10 +56,39 @@
                                 <span class="badge badge-secondary">No</span>
                             @endif
                         </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse" data-target="#emails-{{$lead->id}}" aria-expanded="false" aria-controls="emails-{{$lead->id}}">
+                                Show emails ({{$lead->emails->count()}})
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="py-0 border-0">
+                            <div class="collapse" id="emails-{{$lead->id}}">
+                                <div class="card card-body mt-2 mb-2">
+                                    @if($lead->emails->isNotEmpty())
+                                        <ul class="mb-0 pl-3">
+                                            @foreach($lead->emails as $email)
+                                                <li>
+                                                    {{$email->email}}
+                                                    @if($email->is_hunder_lead_created)
+                                                        <span class="badge badge-success ml-1">Lead created</span>
+                                                    @else
+                                                        <span class="badge badge-secondary ml-1">Not created</span>
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <span class="text-muted">No found emails yet.</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">No domains automation leads yet.</td>
+                        <td colspan="5" class="text-center">No domains automation leads yet.</td>
                     </tr>
                 @endforelse
                 </tbody>

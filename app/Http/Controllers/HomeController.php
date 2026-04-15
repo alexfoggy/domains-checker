@@ -256,7 +256,7 @@ class HomeController extends Controller
 
     public function domainsAutomationLeads()
     {
-        $domainsAutomationLeads = DomainAutomationLead::orderBy('id', 'desc')->paginate(100);
+        $domainsAutomationLeads = DomainAutomationLead::with('emails')->orderBy('id', 'desc')->paginate(100);
 
         return view('domains_automation_leads', get_defined_vars());
     }

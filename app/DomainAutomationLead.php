@@ -12,7 +12,7 @@ class DomainAutomationLead extends Model
 
     protected $fillable = [
         'domain',
-        'domain_rationg',
+        'domain_raiting',
         'is_hunter_synced',
     ];
 
