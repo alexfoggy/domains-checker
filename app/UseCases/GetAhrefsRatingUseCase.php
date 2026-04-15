@@ -15,6 +15,8 @@ class GetAhrefsRatingUseCase
             throw new RuntimeException('AHREFS_API_KEY is not configured.');
         }
 
+        dd($apiKey);
+
         $response = Http::withHeaders([
             'Authorization' => 'Baerer ' . $apiKey,
         ])->get('https://api.ahrefs.com/v3/site-explorer/domain-rating', [
