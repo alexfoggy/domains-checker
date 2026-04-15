@@ -41,7 +41,7 @@
             </div>
         </div>
         <label class="section-title">Domains to check</label>
-        
+
         @if(isset($domainsLast7Days) || isset($domainsPending) || isset($domainsDone) || isset($domainsTaken))
         <div class="row mb-3">
             <div class="col-12">
@@ -80,7 +80,7 @@
             </div><!-- col-sm-3 -->
 
         </div>
-        
+
         <div class="row mb-3">
             <div class="col-12">
                 <form method="GET" action="{{route('domains.to.check')}}" class="d-inline w-100">
@@ -135,7 +135,7 @@
                                 @endif</td>
                             <th scope="row">{{$domain->id}}</th>
                             <td>
-                                <a href="https://app.ahrefs.com/site-explorer/overview/v2/subdomains/live?target={{$domain->domain}}"
+                                <a href="https://app.ahrefs.com/site-explorer/overview?backlinksChartMode=metrics&backlinksChartPerformanceSources=domainRating%7C%7CurlRating&backlinksCompetitorsSource=%22UrlRating%22&backlinksRefdomainsSource=%22RefDomainsNew%22&bestFilter=all&brandedTrafficChartMetric=organic-traffic&brandedTrafficSource=target-brand&chartGranularity=monthly&chartInterval=month6&competitors=&countries=&country=all&entitiesCategory=organisations&generalChartBrandedTraffic=non-branded%7C%7Cother-brands%7C%7Ctarget-brand&generalChartMode=metrics&generalChartPerformanceSources=crawledPages%7C%7CdomainRating%7C%7Cimpressions%7C%7CorganicPages%7C%7CorganicTraffic%7C%7CorganicTrafficValue%7C%7CpaidTraffic%7C%7CrefDomains%7C%7CurlRating&generalCompetitorsSource=%22OrganicTraffic%22&generalCountriesSource=organic-traffic&generalEntitiesChartMetric=Traffic&generalPagesByTrafficChartMode=Percentage&generalPagesByTrafficSource=Pages%7C%7CTraffic&highlightChanges=1m&intentsMainSource=informational&keywordsSource=all&mode=subdomains&organicChartBrandedTraffic=non-branded%7C%7Cother-brands%7C%7Ctarget-brand&organicChartMode=metrics&organicChartPerformanceSources=impressions%7C%7CorganicTraffic%7C%7CorganicTrafficValue&organicCompetitorsSource=%22OrganicTraffic%22&organicCountriesSource=organic-traffic&organicEntitiesChartMetric=Traffic&organicPagesByTrafficChartMode=Percentage&organicPagesByTrafficSource=Pages%7C%7CTraffic&overviewSerpChartMode=Own&overviewSerpChartSpec=AIOverview%7C%7CAdwordsBottom%7C%7CAdwordsTop%7C%7CDiscussions%7C%7CFeaturedSnippet%7C%7CImagePack%7C%7CKnowledgeCard%7C%7CKnowledgePanel%7C%7CLocalPack%7C%7CPaidSiteLinks%7C%7CPeopleAlsoAsk%7C%7CShoppingAds%7C%7CShoppingOrganic%7C%7CSitelinks%7C%7CThumbnail%7C%7CTopStories%7C%7CTweets%7C%7CVideoPreview%7C%7CVideos&overviewSerpManyChartSpec=Own%7C%7CTotal&overview_tab=general&paidSearchPaidKeywordsByTopPositionsChartMode=Percentage&paidTrafficSources=cost%7C%7Ctraffic&target={{$domain->domain}}&topLevelDomainFilter=all&topOrganicKeywordsMode=normal&topOrganicPagesMode=normal&trafficType=Organic&volume_type=average"
                                    target="_blank">{{$domain->domain}}</a></td>
                             <td>
                                 <div class="tag-edit-container" data-domain-id="{{$domain->id}}">
@@ -215,7 +215,7 @@
                     const display = container.querySelector('.tag-display');
                     const edit = container.querySelector('.tag-edit');
                     const input = container.querySelector('input');
-                    
+
                     display.style.display = 'none';
                     edit.style.display = 'inline-block';
                     input.focus();
@@ -229,7 +229,7 @@
                     const edit = container.querySelector('.tag-edit');
                     const input = container.querySelector('input');
                     const originalTag = input.getAttribute('data-original-tag');
-                    
+
                     input.value = originalTag;
                     edit.style.display = 'none';
                     display.style.display = 'inline-block';
@@ -278,7 +278,7 @@
                             if (existingBadge) {
                                 existingBadge.remove();
                             }
-                            
+
                             if (newTag === '') {
                                 // Add "No tag" badge
                                 const noTagBadge = document.createElement('span');
