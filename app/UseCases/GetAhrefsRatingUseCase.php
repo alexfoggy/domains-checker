@@ -7,6 +7,9 @@ use RuntimeException;
 
 class GetAhrefsRatingUseCase
 {
+    /**
+     * @throws \Illuminate\Http\Client\RequestException
+     */
     public static function execute(string $domain): array
     {
         $apiKey = config('services.ahrefs.api_key');
@@ -15,10 +18,9 @@ class GetAhrefsRatingUseCase
             throw new RuntimeException('AHREFS_API_KEY is not configured.');
         }
 
-        dd($apiKey);
-
         $response = Http::withHeaders([
-            'Authorization' => 'Baerer ' . $apiKey,
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Accept' => 'application/json'
         ])->get('https://api.ahrefs.com/v3/site-explorer/domain-rating', [
             'protocol' => 'https',
             'target' => $domain,
