@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AvalaibleDomain;
 use App\Domain;
+use App\DomainAutomationLead;
 use App\DomainInfo;
 use App\DomainToCheck;
 use App\DomainToIgnore;
@@ -248,6 +249,46 @@ class HomeController extends Controller
         }
 
         return redirect()->route('domains.to.check')
+            ->with('upload_success', true)
+            ->with('new_domains_count', $newDomainsCount)
+            ->with('total_processed', $totalProcessed);
+    }
+
+    public function domainsAutomationLeads()
+    {
+        $domainsAutomationLeads = DomainAutomationLead::orderBy('id', 'desc')->paginate(100);
+
+        return view('domains_automation_leads', get_defined_vars());
+    }
+
+    public function domainsAutomationLeadsStore(Request $request)
+    {
+        $request->validate([
+            'domains' => 'required|string',
+        ]);
+
+        $domains = preg_split('/\r\n|\r|\n/', $request->input('domains'));
+        $newDomainsCount = 0;
+        $totalProcessed = 0;
+
+        foreach ($domains as $domain) {
+            $clearedDomain = strtolower(trim(Helper::cleanDomain($domain), ". \t\n\r\0\x0B"));
+
+            if (empty($clearedDomain)) {
+                continue;
+            }
+
+            $totalProcessed++;
+
+            if (!DomainAutomationLead::where('domain', $clearedDomain)->exists()) {
+                DomainAutomationLead::create([
+                    'domain' => $clearedDomain,
+                ]);
+                $newDomainsCount++;
+            }
+        }
+
+        return redirect()->route('domains.automation.leads')
             ->with('upload_success', true)
             ->with('new_domains_count', $newDomainsCount)
             ->with('total_processed', $totalProcessed);

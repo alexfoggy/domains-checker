@@ -34,3 +34,6 @@ Route::post('/domain/delete/{id}', 'Controller@deleteDomain')->name('domain.dele
 Route::post('/domain/checked', 'HomeController@checkedUpdateStatus')->name('domain.checked');
 Route::post('/domain/{id}/update-tag', 'HomeController@updateDomainTag')->name('domain.update.tag');
 
+Route::get('/domains-automation-leads', 'HomeController@domainsAutomationLeads')->name('domains.automation.leads');
+Route::post('/domains-automation-leads', 'HomeController@domainsAutomationLeadsStore')->name('domains.automation.leads.store');
+

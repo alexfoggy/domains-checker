@@ -17,6 +17,9 @@
             <div class="btn-demo mr-2">
                 <a href="{{route('domains.to.free')}}" class="btn btn-danger btn-block mg-b-10">Free</a>
             </div><!-- btn-demo -->
+            <div class="btn-demo mr-2">
+                <a href="{{route('domains.automation.leads')}}" class="btn btn-info btn-block mg-b-10">Domains automation leads</a>
+            </div><!-- btn-demo -->
 
         </div>
         <div class="mb-2">
