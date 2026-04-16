@@ -34,4 +34,8 @@ return [
         'api_key' => env('AHREFS_API_KEY'),
     ],
 
+    'hunter' => [
+        'api_key' => env('HUNTER_API_KEY'),
+    ],
+
 ];
