@@ -66,6 +66,7 @@ class GetHunterEmailsFromDomains extends Command
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
+                $this->error('Error fetching Emails for ' . $domain->domain . ': ' . $e->getMessage());
                 Log::error('Error fetching Ahrefs rating for ' . $domain->domain . ': ' . $e->getMessage());
             }
         }
