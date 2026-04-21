@@ -65,8 +65,10 @@ class SendNewEmailToHunter extends Command
             ]);
             $this->warn(sprintf(
                 'Failed user id=%d email=%s HTTP %s',
-                $email->email,
-                (string)$response->status()
+                [
+                    $email->email,
+                    (string)$response->status()
+                ]
             ));
 
             if ($response->status() === 429) {
