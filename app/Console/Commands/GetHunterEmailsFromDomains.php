@@ -51,13 +51,13 @@ class GetHunterEmailsFromDomains extends Command
             DB::beginTransaction();
             try {
                 $emails = FindHunterEmailByDomainUseCase::execute($domain->domain);
-
-                $this->info('Fetched Emails for ' . $domain->domain . ': ' . implode(', ', $emails));
+                dd($emails);
+                $this->info('Fetched Emails for ' . $domain->domain);
 
                 foreach ($emails as $email) {
                     DomainAutomationLeadEmail::create([
                         'domain_automation_lead_id' => $domain->id,
-                        'email' => $email
+                        'email' => $email['value']
                     ]);
                 }
 

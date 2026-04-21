@@ -15,7 +15,8 @@ class FindHunterEmailByDomainUseCase
     /**
      * Calls Hunter Email Finder once per first_name (marketing, info, promo) and returns merged unique emails.
      *
-     * @return list<string>
+     * @param string $domain
+     * @return array
      */
     public static function execute(string $domain): array
     {
@@ -38,13 +39,11 @@ class FindHunterEmailByDomainUseCase
         return $emails;
     }
 
-    private static function fetchEmailForFirstName(string $domain, string $apiKey, string $firstName): ?string
+    private static function fetchEmailForFirstName(string $domain, string $apiKey): ?string
     {
-        $response = Http::acceptJson()->get(self::BASE_URL . '/email-finder', [
-            'locale' => 'en',
+        $response = Http::acceptJson()->get(self::BASE_URL . '/domain-search', [
             'domain' => $domain,
             'api_key' => $apiKey,
-            'first_name' => $firstName,
         ]);
 
         if ($response->status() === 404) {
@@ -59,13 +58,7 @@ class FindHunterEmailByDomainUseCase
 
         $payload = $response->json();
         $data = is_array($payload) ? ($payload['data'] ?? null) : null;
-        $email = is_array($data) ? ($data['email'] ?? null) : null;
-
-        if (!is_string($email) || $email === '') {
-            return null;
-        }
-
-        return $email;
+        return is_array($data) ? ($data['emails'] ?? null) : null;
     }
 
     /**
