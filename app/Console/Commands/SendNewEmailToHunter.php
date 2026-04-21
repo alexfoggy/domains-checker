@@ -63,13 +63,6 @@ class SendNewEmailToHunter extends Command
                 'status' => $response->status(),
                 'body' => $response->json(),
             ]);
-            $this->warn(sprintf(
-                'Failed user id=%d email=%s HTTP %s',
-                [
-                    $email->email,
-                    (string)$response->status()
-                ]
-            ));
 
             if ($response->status() === 429) {
                 $this->error('Hunter.io rate limit reached. Increase --sleep and retry.');
