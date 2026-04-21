@@ -43,6 +43,7 @@ class SendNewEmailToHunter extends Command
                 [
                     'first_name' => 'Hi',
                     'last_name' => 'there',
+                    'email' => $email->email,
                 ],
                 $listPayload
             );
@@ -51,18 +52,20 @@ class SendNewEmailToHunter extends Command
 
             if ($response->successful()) {
                 $ok++;
+                $email->is_hunder_lead_created = true;
+                $email->save();
                 continue;
             }
 
             $failed++;
             Log::warning('Hunter.io lead upsert failed', [
-                'email' => $email,
+                'email' => $email->email,
                 'status' => $response->status(),
                 'body' => $response->json(),
             ]);
             $this->warn(sprintf(
                 'Failed user id=%d email=%s HTTP %s',
-                $email,
+                $email->email,
                 (string)$response->status()
             ));
 
