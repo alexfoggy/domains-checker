@@ -2,6 +2,7 @@
 
 namespace App\UseCases;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
@@ -18,7 +19,7 @@ class FindHunterEmailByDomainUseCase
      * @param string $domain
      * @return array
      */
-    public static function execute(string $domain): array
+    public static function execute(string $domain): Collection
     {
         $apiKey = config('services.hunter.api_key');
 
@@ -26,15 +27,18 @@ class FindHunterEmailByDomainUseCase
             throw new RuntimeException('HUNTER_API_KEY is not configured.');
         }
 
-        $emails = [];
+        $data = collect();
 
         $list = self::fetchEmailForFirstName($domain, $apiKey);
 
-        foreach ($list['emails'] as $email){
-            $emails[] = $email['value'];
+        foreach ($list['emails'] as $email) {
+            $data->push([
+                'email' => $email['value'],
+                'type' => $email['type']
+            ]);
         }
 
-        return $emails;
+        return $data;
     }
 
     private static function fetchEmailForFirstName(string $domain, string $apiKey): ?array
@@ -60,7 +64,7 @@ class FindHunterEmailByDomainUseCase
     }
 
     /**
-     * @param  array<string, mixed>|null  $json
+     * @param array<string, mixed>|null $json
      */
     private static function formatHunterError(?array $json, string $fallbackBody): string
     {
