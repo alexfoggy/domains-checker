@@ -47,7 +47,7 @@ class SendNewEmailToHunter extends Command
                 ],
                 $listPayload
             );
-
+            dd($payload);
             $response = $client->upsertLead($payload);
 
             if ($response->successful()) {
