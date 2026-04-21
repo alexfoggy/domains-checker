@@ -55,8 +55,8 @@ class FindHunterEmailByDomainUseCase
         }
 
         $payload = $response->json();
-        $data = is_array($payload) ? ($payload['data'] ?? null) : null;
-        return is_array($data) ? ($data['emails'] ?? null) : null;
+
+        return $payload['data'];
     }
 
     /**
