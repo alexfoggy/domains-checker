@@ -38,7 +38,7 @@ class FindHunterEmailByDomainUseCase
             ]);
         }
 
-        return $data;
+        return $data->take(3);
     }
 
     private static function fetchEmailForFirstName(string $domain, string $apiKey): ?array

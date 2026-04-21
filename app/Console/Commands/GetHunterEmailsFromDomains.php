@@ -51,7 +51,7 @@ class GetHunterEmailsFromDomains extends Command
             DB::beginTransaction();
             try {
                 $emails = FindHunterEmailByDomainUseCase::execute($domain->domain);
-                dd($emails);
+
                 $this->info('Fetched Emails for ' . $domain->domain);
 
                 foreach ($emails as $email) {
