@@ -27,6 +27,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('domains:getInfo')->everyFifteenMinutes()->name('updateInfo')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
         $schedule->command('domainsuploaded:check')->hourly()->name('checkuploaded')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
         $schedule->command('namecheap:checknew')->everyMinute()->name('checkDomains')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
+        $schedule->command('hunter:send-new-email-to-hunter')->everyMinute()->name('sendNewEmailToHunter')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
+        $schedule->command('ahrefs:get-domains-rating')->everyMinute()->name('getAhrefsRating')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
         $schedule->call('App\Parsing\ParsingStart@parsing')->dailyAt('00:00')->name('parsing')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
         $schedule->command('domainsuploaded:check')->everyMinute()->name('checkFromUploaded')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
         $schedule->command('cache:clear')->daily()->name('cacheClear')->appendOutputTo(storage_path('logs/caching.log'))->withoutOverlapping();
