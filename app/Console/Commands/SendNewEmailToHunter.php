@@ -41,8 +41,6 @@ class SendNewEmailToHunter extends Command
         foreach ($emailsToSend as $email) {
             $payload = array_merge(
                 [
-                    'first_name' => 'Hi',
-                    'last_name' => 'there',
                     'email' => $email->email,
                 ],
                 $listPayload
