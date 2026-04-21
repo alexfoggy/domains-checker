@@ -41,7 +41,7 @@ class HunterClient
     public function upsertLead(array $lead): Response
     {
         $url = $this->baseUrl . '/v2/leads?' . http_build_query(['api_key' => $this->apiKey]);
-        dd($url);
+
         return Http::timeout((int) config('services.hunter.timeout', 30))
             ->acceptJson()
             ->asJson()
