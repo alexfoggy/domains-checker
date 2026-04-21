@@ -37,7 +37,7 @@ class FindHunterEmailByDomainUseCase
         return $emails;
     }
 
-    private static function fetchEmailForFirstName(string $domain, string $apiKey): ?string
+    private static function fetchEmailForFirstName(string $domain, string $apiKey): ?array
     {
         $response = Http::acceptJson()->get(self::BASE_URL . '/domain-search', [
             'domain' => $domain,
