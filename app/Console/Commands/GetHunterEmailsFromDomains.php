@@ -57,7 +57,7 @@ class GetHunterEmailsFromDomains extends Command
                 foreach ($emails as $email) {
                     DomainAutomationLeadEmail::create([
                         'domain_automation_lead_id' => $domain->id,
-                        'email' => $email['value']
+                        'email' => $email
                     ]);
                 }
 

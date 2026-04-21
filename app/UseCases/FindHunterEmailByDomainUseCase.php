@@ -28,12 +28,10 @@ class FindHunterEmailByDomainUseCase
 
         $emails = [];
 
-        foreach (self::FIRST_NAMES as $firstName) {
-            $email = self::fetchEmailForFirstName($domain, $apiKey, $firstName);
+        $list = self::fetchEmailForFirstName($domain, $apiKey);
 
-            if ($email !== null && $email !== '' && !in_array($email, $emails, true)) {
-                $emails[] = $email;
-            }
+        foreach ($list as $email){
+            $emails[] = $email['value'];
         }
 
         return $emails;
