@@ -55,7 +55,7 @@ class FindHunterEmailByDomainUseCase
         }
 
         $payload = $response->json();
-
+        dd($payload);
         return $payload['data'];
     }
 
