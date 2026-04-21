@@ -36,6 +36,9 @@ return [
 
     'hunter' => [
         'api_key' => env('HUNTER_API_KEY'),
+        'base_url' => env('HUNTER_IO_BASE_URL', 'https://api.hunter.io'),
+        'leads_list_id' => env('HUNTER_IO_LEADS_LIST_ID'),
+        'timeout' => (int) env('HUNTER_IO_TIMEOUT', 30),
+        'source' => env('HUNTER_IO_SOURCE', 'Totem'),
     ],
-
 ];
