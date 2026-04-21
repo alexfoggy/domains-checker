@@ -58,6 +58,8 @@ class SendNewEmailToHunter extends Command
             }
 
             $failed++;
+
+            dd($response->json());
             Log::warning('Hunter.io lead upsert failed', [
                 'email' => $email->email,
                 'status' => $response->status(),
