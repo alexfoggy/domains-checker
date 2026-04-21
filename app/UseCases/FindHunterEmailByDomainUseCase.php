@@ -30,7 +30,7 @@ class FindHunterEmailByDomainUseCase
 
         $list = self::fetchEmailForFirstName($domain, $apiKey);
 
-        foreach ($list as $email){
+        foreach ($list['emails'] as $email){
             $emails[] = $email['value'];
         }
 
@@ -55,7 +55,7 @@ class FindHunterEmailByDomainUseCase
         }
 
         $payload = $response->json();
-        dd($payload);
+
         return $payload['data'];
     }
 
