@@ -43,6 +43,8 @@ class SendNewEmailToHunter extends Command
 
             if (!$compaignId) {
                 $skipped++;
+                $email->is_hunder_lead_created = true;
+                $email->save();
                 continue;
             }
 
