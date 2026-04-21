@@ -38,7 +38,17 @@ return [
         'api_key' => env('HUNTER_API_KEY'),
         'base_url' => env('HUNTER_IO_BASE_URL', 'https://api.hunter.io'),
         'leads_list_id' => env('HUNTER_IO_LEADS_LIST_ID'),
-        'timeout' => (int) env('HUNTER_IO_TIMEOUT', 30),
+        'timeout' => (int)env('HUNTER_IO_TIMEOUT', 30),
         'source' => env('HUNTER_IO_SOURCE', 'Totem'),
+        'campaigns' => [
+            'one' => 825245,
+            'two' => 825255,
+            'three' => 825257,
+            'four' => 825258,
+            'five' => 825259,
+            'six' => 825260,
+            'seven' => 825261,
+            'eight' => 825263,
+        ]
     ],
 ];

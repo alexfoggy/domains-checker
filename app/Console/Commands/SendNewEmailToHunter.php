@@ -22,8 +22,6 @@ class SendNewEmailToHunter extends Command
             return self::FAILURE;
         }
 
-        $listPayload = HunterClient::optionalLeadsListPayloadFromConfig();
-
         $emailsToSend = DomainAutomationLeadEmail::where('is_hunder_lead_created', false)
             ->get();
 
@@ -37,16 +35,18 @@ class SendNewEmailToHunter extends Command
 
         $ok = 0;
         $failed = 0;
+        $skipped = 0;
 
         foreach ($emailsToSend as $email) {
-            $payload = array_merge(
-                [
-                    'email' => $email->email,
-                ],
-                $listPayload
-            );
 
-            $response = $client->upsertLead($payload);
+            $compaignId = $this->getCompaignIdForEmail($email);
+
+            if (!$compaignId) {
+                $skipped++;
+                continue;
+            }
+
+            $response = $client->addCampaignRecipient($email->email, $compaignId);
 
             if ($response->successful()) {
                 $ok++;
@@ -57,7 +57,6 @@ class SendNewEmailToHunter extends Command
 
             $failed++;
 
-            dd($response->json());
             Log::warning('Hunter.io lead upsert failed', [
                 'email' => $email->email,
                 'status' => $response->status(),
@@ -70,8 +69,42 @@ class SendNewEmailToHunter extends Command
             }
         }
 
-        $this->info(sprintf('Done. Success: %d, failed: %d.', $ok, $failed));
+        $this->info(sprintf('Done. Success: %d, Failed: %d. Skipped: %d.', $ok, $failed, $skipped));
 
         return $failed > 0 ? self::FAILURE : self::SUCCESS;
+    }
+
+    private function getCompaignIdForEmail(DomainAutomationLeadEmail $email): ?string
+    {
+        switch ($email->domainAutomationLead->domain_raiting) {
+            case null:
+            case $email->domainAutomationLead->domain_raiting >= 0 &&
+                $email->domainAutomationLead->domain_raiting < 5:
+                return config('services.hunter.campaigns.one');
+            case $email->domainAutomationLead->domain_raiting >= 5 &&
+                $email->domainAutomationLead->domain_raiting < 10:
+                return config('services.hunter.campaigns.two');
+            case $email->domainAutomationLead->domain_raiting >= 10 &&
+                $email->domainAutomationLead->domain_raiting < 15:
+                return config('services.hunter.campaigns.three');
+            case $email->domainAutomationLead->domain_raiting >= 15 &&
+                $email->domainAutomationLead->domain_raiting < 20:
+                return config('services.hunter.campaigns.four');
+            case $email->domainAutomationLead->domain_raiting >= 20 &&
+                $email->domainAutomationLead->domain_raiting < 25:
+                return config('services.hunter.campaigns.five');
+            case $email->domainAutomationLead->domain_raiting >= 25 &&
+                $email->domainAutomationLead->domain_raiting < 30:
+                return config('services.hunter.campaigns.six');
+            case $email->domainAutomationLead->domain_raiting >= 30 &&
+                $email->domainAutomationLead->domain_raiting < 35:
+                return config('services.hunter.campaigns.seven');
+            case $email->domainAutomationLead->domain_raiting >= 35 &&
+                $email->domainAutomationLead->domain_raiting < 40:
+                return config('services.hunter.campaigns.eight');
+            default:
+                return null;
+        }
+
     }
 }

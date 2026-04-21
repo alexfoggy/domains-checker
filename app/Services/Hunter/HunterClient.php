@@ -4,6 +4,7 @@ namespace App\Services\Hunter;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use RuntimeException;
 
 class HunterClient
 {
@@ -13,21 +14,22 @@ class HunterClient
     public function __construct(
         string $apiKey,
         string $baseUrl = 'https://api.hunter.io'
-    ) {
+    )
+    {
         $this->apiKey = $apiKey;
         $this->baseUrl = $baseUrl;
     }
 
     public static function fromConfig(): self
     {
-        $key = (string) config('services.hunter.api_key', '');
+        $key = (string)config('services.hunter.api_key', '');
         if ($key === '') {
-            throw new \RuntimeException('Hunter.io API key is missing. Set HUNTER_IO_API_KEY in your environment.');
+            throw new RuntimeException('Hunter.io API key is missing. Set HUNTER_IO_API_KEY in your environment.');
         }
 
         return new self(
             $key,
-            rtrim((string) config('services.hunter.base_url', 'https://api.hunter.io'), '/')
+            rtrim((string)config('services.hunter.base_url', 'https://api.hunter.io'), '/')
         );
     }
 
@@ -36,16 +38,26 @@ class HunterClient
      *
      * @see https://hunter.io/api-documentation/v2#create-or-update-a-lead
      *
-     * @param  array<string, mixed>  $lead
+     * @param array<string, mixed> $lead
      */
     public function upsertLead(array $lead): Response
     {
         $url = $this->baseUrl . '/v2/leads?' . http_build_query(['api_key' => $this->apiKey]);
 
-        return Http::timeout((int) config('services.hunter.timeout', 30))
+        return Http::timeout((int)config('services.hunter.timeout', 30))
             ->acceptJson()
             ->asJson()
             ->put($url, $lead);
+    }
+
+    public function addCampaignRecipient(string $email, string $campaignId)
+    {
+        $url = $this->baseUrl . '/v2/campaigns/' . $campaignId . '/recipients?' . http_build_query(['api_key' => $this->apiKey]);
+
+        return Http::timeout((int)config('services.hunter.timeout', 30))
+            ->acceptJson()
+            ->asJson()
+            ->post($url, ['emails' => [$email]]);
     }
 
     /**
@@ -58,6 +70,6 @@ class HunterClient
             return [];
         }
 
-        return ['leads_list_id' => (int) $id];
+        return ['leads_list_id' => (int)$id];
     }
 }
