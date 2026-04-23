@@ -43,7 +43,12 @@ class GetHunterEmailsFromDomains extends Command
      */
     public function handle()
     {
-        $domains = DomainAutomationLead::where('is_hunter_synced', false)->get();
+        $domains = DomainAutomationLead::where('is_hunter_synced', false)
+            ->where(function ($query) {
+                $query->whereNotNull('domain_raiting')
+                    ->where('domain_raiting', '<=', 40);
+            })
+            ->get();
 
         $this->info('Total domains to process: ' . $domains->count());
 
