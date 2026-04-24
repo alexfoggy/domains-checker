@@ -39,6 +39,15 @@ class SendNewEmailToHunter extends Command
 
         foreach ($emailsToSend as $email) {
 
+            $listPayload = HunterClient::optionalLeadsListPayloadFromConfig();
+
+            $payload = array_merge(
+                $this->leadPayloadFromUser($email->email, $email->domainAutomationLead->domain_raiting, $email->domainAutomationLead->domain),
+                $listPayload
+            );
+
+            $client->upsertLead($payload);
+
             $compaignId = $this->getCompaignIdForEmail($email);
 
             if (!$compaignId) {
@@ -108,5 +117,19 @@ class SendNewEmailToHunter extends Command
                 return null;
         }
 
+    }
+
+    private function leadPayloadFromUser(string $email, int $domainRating, string $domain): array
+    {
+        $payload = [
+            'email' => $email,
+            'source' => 'Domain Checker',
+            'custom_attributes' => [
+                'domainrating' => $domainRating,
+                'websiteurl' => $domain,
+            ],
+        ];
+
+        return $payload;
     }
 }
