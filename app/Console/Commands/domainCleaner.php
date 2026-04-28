@@ -43,6 +43,7 @@ class domainCleaner extends Command
         });
         $domains->groupBy('domain')->filter(function ($item) {
             if ($item->count() > 1) {
+                $this->info('Removing duplicate domain: ' . $item->first()->domain);
                 $item->last()->delete();
             }
         });
