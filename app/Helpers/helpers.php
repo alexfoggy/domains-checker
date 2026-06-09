@@ -176,7 +176,7 @@ class Helper
             "https://",
             "https",
             "http",
-            "www"
+            "www."
         ];
 
         // Remove all unwanted substrings
