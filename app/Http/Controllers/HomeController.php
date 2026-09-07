@@ -140,8 +140,8 @@ class HomeController extends Controller
 
     public function domainsToCheckRestart(): RedirectResponse
     {
-        DomainToCheck::where('status', 2)
-            ->orWhere('is_checked', 0)
+        DomainToCheck::where('status', '<>', 1)
+            ->where('is_checked', '<>', 1)
             ->update(['status' => 0]);
 
         return redirect()->route('domains.to.check');
