@@ -140,7 +140,9 @@ class HomeController extends Controller
 
     public function domainsToCheckRestart(): RedirectResponse
     {
-        DomainToCheck::where('status', 2)->where('is_checked', 0)->update(['status' => 0]);
+        DomainToCheck::where('status', 2)
+            ->orWhere('is_checked', 0)
+            ->update(['status' => 0]);
 
         return redirect()->route('domains.to.check');
     }
@@ -231,11 +233,11 @@ class HomeController extends Controller
 
         foreach ($domains as $domain) {
             $clearedDomain = Helper::cleanDomain($domain);
-            
+
             if (empty($clearedDomain)) {
                 continue;
             }
-            
+
             $totalProcessed++;
 
             if (!DomainToCheck::where('domain', $clearedDomain)->first()) {
