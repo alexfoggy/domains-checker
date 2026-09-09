@@ -199,6 +199,19 @@ class HomeController extends Controller
         return back();
     }
 
+    public function domainsToCheckDelete(Request $request)
+    {
+        $checkbox = $request->input('checkbox');
+        if (!empty($checkbox)) {
+            $ids = array_filter(array_map('intval', array_keys($checkbox)));
+            if (!empty($ids)) {
+                DomainToCheck::whereIn('id', $ids)->delete();
+            }
+        }
+
+        return back();
+    }
+
     public function updateDomainTag(Request $request, $id)
     {
         $request->validate([

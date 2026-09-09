@@ -130,9 +130,9 @@
                     <tbody>
                     @foreach($domainsToCheck as $key => $domain)
                         <tr>
-                            <td>@if(!$domain->is_checked)
-                                    <input type="checkbox" name="checkbox[{{$domain->id}}]">
-                                @endif</td>
+                            <td>
+                                <input type="checkbox" name="checkbox[{{$domain->id}}]">
+                            </td>
                             <th scope="row">{{$domain->id}}</th>
                             <td>
                                 <a href="https://app.ahrefs.com/site-explorer/overview?backlinksChartMode=metrics&backlinksChartPerformanceSources=domainRating%7C%7CurlRating&backlinksCompetitorsSource=%22UrlRating%22&backlinksRefdomainsSource=%22RefDomainsNew%22&bestFilter=all&brandedTrafficChartMetric=organic-traffic&brandedTrafficSource=target-brand&chartGranularity=monthly&chartInterval=month6&competitors=&countries=&country=all&entitiesCategory=organisations&generalChartBrandedTraffic=non-branded%7C%7Cother-brands%7C%7Ctarget-brand&generalChartMode=metrics&generalChartPerformanceSources=crawledPages%7C%7CdomainRating%7C%7Cimpressions%7C%7CorganicPages%7C%7CorganicTraffic%7C%7CorganicTrafficValue%7C%7CpaidTraffic%7C%7CrefDomains%7C%7CurlRating&generalCompetitorsSource=%22OrganicTraffic%22&generalCountriesSource=organic-traffic&generalEntitiesChartMetric=Traffic&generalPagesByTrafficChartMode=Percentage&generalPagesByTrafficSource=Pages%7C%7CTraffic&highlightChanges=1m&intentsMainSource=informational&keywordsSource=all&mode=subdomains&organicChartBrandedTraffic=non-branded%7C%7Cother-brands%7C%7Ctarget-brand&organicChartMode=metrics&organicChartPerformanceSources=impressions%7C%7CorganicTraffic%7C%7CorganicTrafficValue&organicCompetitorsSource=%22OrganicTraffic%22&organicCountriesSource=organic-traffic&organicEntitiesChartMetric=Traffic&organicPagesByTrafficChartMode=Percentage&organicPagesByTrafficSource=Pages%7C%7CTraffic&overviewSerpChartMode=Own&overviewSerpChartSpec=AIOverview%7C%7CAdwordsBottom%7C%7CAdwordsTop%7C%7CDiscussions%7C%7CFeaturedSnippet%7C%7CImagePack%7C%7CKnowledgeCard%7C%7CKnowledgePanel%7C%7CLocalPack%7C%7CPaidSiteLinks%7C%7CPeopleAlsoAsk%7C%7CShoppingAds%7C%7CShoppingOrganic%7C%7CSitelinks%7C%7CThumbnail%7C%7CTopStories%7C%7CTweets%7C%7CVideoPreview%7C%7CVideos&overviewSerpManyChartSpec=Own%7C%7CTotal&overview_tab=general&paidSearchPaidKeywordsByTopPositionsChartMode=Percentage&paidTrafficSources=cost%7C%7Ctraffic&target={{$domain->domain}}&topLevelDomainFilter=all&topOrganicKeywordsMode=normal&topOrganicPagesMode=normal&trafficType=Organic&volume_type=average"
@@ -170,7 +170,8 @@
                     @endforeach
                     </tbody>
                 </table>
-                <button class="btn btn-warning my-4">Set domains checked</button>
+                <button type="submit" class="btn btn-warning my-4">Set domains checked</button>
+                <button type="submit" formaction="{{ route('domains.to.check.delete') }}" class="btn btn-danger my-4 ml-2" onclick="return confirmDeleteSelected();">Delete selected</button>
             </form>
             <div class="pagination-wrapper mt-4">
                 <div class="d-flex justify-content-center">
@@ -181,6 +182,15 @@
     </div><!-- section-wrapper -->
 
     <script>
+        function confirmDeleteSelected() {
+            const checked = document.querySelectorAll('input[name^="checkbox["]:checked');
+            if (checked.length === 0) {
+                alert('Select at least one domain to delete.');
+                return false;
+            }
+            return confirm('Delete selected domains from the database? This cannot be undone.');
+        }
+
         // Function to close upload success modal
         function closeUploadModal() {
             const modal = document.getElementById('uploadSuccessModal');
