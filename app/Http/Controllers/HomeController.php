@@ -149,7 +149,7 @@ class HomeController extends Controller
 
     public function domainsToCheckAvalibe(Request $request)
     {
-        $query = DomainToCheck::where('status', 1);
+        $query = DomainToCheck::where('status', 1)->where('is_checked', '<>', 1);
 
         if ($request->has('tag') && $request->tag !== '') {
             $query->where('tag', $request->tag);
@@ -171,7 +171,7 @@ class HomeController extends Controller
 
     public function domainsToCheckAvalibeExport(Request $request)
     {
-        $query = DomainToCheck::where('status', 1);
+        $query = DomainToCheck::where('status', 1)->where('is_checked', '<>', 1);
 
         if ($request->has('tag') && $request->tag !== '') {
             $query->where('tag', $request->tag);
