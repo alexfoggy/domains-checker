@@ -109,7 +109,7 @@ class HomeController extends Controller
             $query->where('domain', 'like', '%' . $request->search . '%');
         }
 
-        $domainsToCheck = $query->paginate(100)->appends($request->query());
+        $domainsToCheck = $query->orderBy('id', 'asc')->paginate(100)->appends($request->query());
         $tags = DomainToCheck::distinct()->pluck('tag')->filter()->sort()->values();
         $domainsLast7Days = DomainToCheck::where('created_at', '>=', now()->subDays(7))->count();
         $domainsPending = DomainToCheck::where('status', 0)->count();
